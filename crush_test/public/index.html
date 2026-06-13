@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호감도 테스트</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-animation"></div>
+    <div class="container glass">
+        
+        <!-- 홈 / 방 생성 화면 -->
+        <div id="home-screen" class="screen active">
+            <h1>호감도 테스트</h1>
+            <p class="subtitle">우리 반, 누가 나를 좋아할까?</p>
+            
+            <div class="input-group">
+                <button id="btn-show-create" class="btn secondary">방 만들기 (제작자용)</button>
+                <button id="btn-show-join" class="btn primary">방 참가하기</button>
+            </div>
+
+            <div id="create-room-section" class="hidden">
+                <input type="password" id="creator-code" placeholder="제작자 코드 입력">
+                <p id="creator-error" class="error-text"></p>
+                <input type="number" id="max-users" placeholder="목표 인원 수 (예: 5)">
+                <button id="btn-create-room" class="btn secondary">생성하기</button>
+                <button class="btn btn-back-home" style="margin-top: 10px;">뒤로 가기</button>
+            </div>
+            
+            <div id="room-created-section" class="hidden">
+                <p>방이 생성되었습니다! 아래 방 코드를 친구들에게 공유하세요.</p>
+                <h2 id="display-room-code" style="margin: 1rem 0; color: var(--accent); text-align: center; font-size: 2.5rem; letter-spacing: 5px;"></h2>
+                <button id="btn-enter-my-room" class="btn primary">내 방에 바로 참가하기</button>
+            </div>
+        </div>
+
+        <!-- 참가 화면 (데이터 입력) -->
+        <div id="join-screen" class="screen hidden">
+            <h1>참가하기</h1>
+            <p class="subtitle">방 코드와 내 정보를 입력해 주세요.</p>
+            
+            <div class="input-group form-group">
+                <input type="text" id="join-room-code" placeholder="방 코드 6자리 (예: 1A2B3C)" style="text-transform: uppercase;">
+                <input type="text" id="user-name" placeholder="내 이름">
+                <input type="text" id="user-student-id" placeholder="내 출석번호 (숫자만)">
+            </div>
+            
+            <div class="picks-group">
+                <h3>나의 호감도 TOP 5 (출석번호)</h3>
+                <input type="text" id="pick-1" placeholder="1위 출석번호">
+                <input type="text" id="pick-2" placeholder="2위 출석번호">
+                <input type="text" id="pick-3" placeholder="3위 출석번호">
+                <input type="text" id="pick-4" placeholder="4위 출석번호">
+                <input type="text" id="pick-5" placeholder="5위 출석번호">
+            </div>
+
+            <p id="join-error" class="error-text"></p>
+            <button id="btn-submit-picks" class="btn primary">제출하기</button>
+            <button class="btn btn-back-home" style="margin-top: 10px;">뒤로 가기</button>
+        </div>
+
+        <!-- 대기 화면 -->
+        <div id="waiting-screen" class="screen hidden">
+            <h1>대기 중...</h1>
+            <div class="loader"></div>
+            <p>친구들이 모두 참여할 때까지 기다려 주세요.</p>
+            <p id="wait-status" class="status-text">현재 인원: 0 / 0</p>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result-screen" class="screen hidden">
+            <h1>결과 발표</h1>
+            <p class="subtitle">내가 찍은 친구들은 나를 몇 위로 생각할까?</p>
+            <div id="results-list" class="results-list">
+                <!-- JS에서 동적으로 채워짐 -->
+            </div>
+            <button id="btn-go-home" class="btn">처음으로</button>
+        </div>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+PyQt6
+psutil
+fastapi
+uvicorn
+google-generativeai
+python-dotenv
+Pillow

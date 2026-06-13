@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="ParkiCare AI - AI 기반 파킨슨병 맞춤형 인지·운동 트레이닝 케어 시스템. 환자별 취약 영역을 AI가 분석하여 개인화된 훈련을 자동 제공합니다.">
+  <meta name="theme-color" content="#080c18">
+  <meta property="og:title" content="ParkiCare AI - 파킨슨병 맞춤형 케어">
+  <meta property="og:description" content="AI가 실시간으로 분석하여 당신의 취약 영역에 맞는 맞춤형 훈련을 제공합니다">
+  <title>ParkiCare AI - 파킨슨병 맞춤형 케어 시스템</title>
+
+  <!-- 폰트 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- 스타일 -->
+  <link rel="stylesheet" href="/static/css/style.css">
+
+  <!-- 파비콘 -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+</head>
+<body>
+
+  <!-- 배경 파티클 효과 -->
+  <canvas id="bg-canvas" style="
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    opacity:0.35;
+  "></canvas>
+
+  <!-- 앱 루트 -->
+  <main id="app-root" style="position:relative; z-index:1;">
+    <!-- SPA 콘텐츠가 JS로 주입됩니다 -->
+    <div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;">
+      <div style="font-size:52px;animation:spin 1s linear infinite">🧬</div>
+      <div style="color:#8a9ab8;font-size:14px;">로딩 중...</div>
+    </div>
+  </main>
+
+  <style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <!-- 데이터/분석 모듈 -->
+  <script src="/static/js/storage.js"></script>
+
+  <!-- 게임 모듈 -->
+  <script src="/static/js/games/memory-sequence.js"></script>
+  <script src="/static/js/games/attention-stroop.js"></script>
+  <script src="/static/js/games/motor-response.js"></script>
+
+  <!-- 메인 앱 -->
+  <script src="/static/js/app.js"></script>
+
+  <!-- 배경 파티클 -->
+  <script>
+    (function() {
+      const canvas = document.getElementById('bg-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles;
+
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+
+      function initParticles() {
+        particles = Array.from({length: 40}, () => ({
+          x: Math.random() * W,
+          y: Math.random() * H,
+          r: Math.random() * 1.5 + 0.5,
+          dx: (Math.random() - 0.5) * 0.25,
+          dy: (Math.random() - 0.5) * 0.25,
+          a: Math.random(),
+          color: Math.random() > 0.5 ? '#00D4FF' : '#7B2FBE',
+        }));
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.a * 0.6;
+          ctx.fill();
+          p.x += p.dx;
+          p.y += p.dy;
+          p.a += 0.003;
+          if (p.a > 1) p.a = 0;
+          if (p.x < 0) p.x = W;
+          if (p.x > W) p.x = 0;
+          if (p.y < 0) p.y = H;
+          if (p.y > H) p.y = 0;
+        });
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      initParticles();
+      draw();
+      window.addEventListener('resize', () => { resize(); initParticles(); });
+    })();
+  </script>
+
+</body>
+</html>

@@ -435,10 +435,11 @@ const App = (() => {
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       ctx.lineWidth = 1;
       ctx.stroke();
+      const yLabel = cy - r * (pct / 100);
       ctx.fillStyle = 'rgba(200,214,240,0.5)';
       ctx.font = '10px Outfit';
       ctx.textAlign = 'right';
-      ctx.fillText(v + '%', pad.left - 4, y + 4);
+      ctx.fillText(pct + '%', cx - 6, yLabel + 4);
     });
     angles.forEach(a => {
       ctx.beginPath();

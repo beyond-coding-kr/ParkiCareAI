@@ -1,6 +1,7 @@
 const App = (() => {
   let currentScreen = 'home';
   let currentGameType = null;
+
   const GAME_INFO = {
     memory_sequence: {
       id: 'memory_sequence', label: '기억력 훈련', desc: '숫자 배열을 기억하고 순서대로 입력',
@@ -15,11 +16,13 @@ const App = (() => {
       color: '#00FF94',
     },
   };
+
   function init() {
     document.addEventListener('DOMContentLoaded', () => {
       navigateTo('home');
     });
   }
+
   function navigateTo(screen, params = {}) {
     currentScreen = screen;
     const root = document.getElementById('app-root');
@@ -31,6 +34,7 @@ const App = (() => {
       root.style.transform = 'translateY(0)';
     }, 180);
   }
+
   function renderScreen(screen, params, root) {
     switch (screen) {
       case 'home':       renderHome(root); break;
@@ -43,6 +47,7 @@ const App = (() => {
       default:           renderHome(root);
     }
   }
+
   function renderHome(root) {
     const profiles = Storage.getProfiles();
     const current = Storage.getCurrentProfile();
@@ -95,6 +100,7 @@ const App = (() => {
       });
     });
   }
+
   function profileCard(p, isActive) {
     const weakProfile = Storage.getWeakProfile(p.id);
     const score = weakProfile?.overallScore ?? null;
@@ -104,7 +110,7 @@ const App = (() => {
         <div class="profile-avatar" style="background:#4a90e2">${p.name[0]}</div>
         <div class="profile-info">
           <div class="profile-name">${p.name}</div>
-          <div class="profile-meta">${p.age}세 · ${STAGE_LABELS[p.stage]}</div>
+          <div class="profile-meta">${p.age}세</div>
         </div>
         <div class="profile-score">
           ${score !== null ? `<span style="color:${grade.color}">${score}</span>` : '<span class="score-none">미분석</span>'}
@@ -113,13 +119,11 @@ const App = (() => {
       </div>
     `;
   }
-  const STAGE_LABELS = {
-    stage1: '초기 단계', stage2: '경증', stage3: '중등도',
-    stage4: '중증', stage5: '최중증',
-  };
+
   const AVATAR_COLORS = [
     '#00D4FF','#7B2FBE','#00FF94','#FF6B6B','#FFB800','#FF69B4',
   ];
+
   function renderProfileCreate(root, params) {
     root.innerHTML = `
       <div class="screen profile-screen">
@@ -145,15 +149,19 @@ const App = (() => {
       const age = parseInt(document.getElementById('f-age').value);
       if (!name || !age) return;
       const profile = {
-        id: 'p_' + Date.now(),
-        name, age, color: '#4a90e2',
-createdAt: new Date().toISOString(),
+        name,
+        age
       };
-      Storage.saveProfile(profile);
-      Storage.setCurrentProfile(profile.id);
-      navigateTo('hub');
+      const response = Storage.saveProfile(profile);
+      if (response && response.id) {
+        Storage.setCurrentProfile(response.id);
+        navigateTo('hub');
+      } else {
+        showToast('프로필 생성 실패');
+      }
     });
   }
+
   function renderHub(root) {
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('home'); return; }
@@ -203,11 +211,11 @@ createdAt: new Date().toISOString(),
       });
     });
   }
+
   function gameCard(gameInfo, weakProfile, profileId) {
     const game = weakProfile?.games?.[gameInfo.id];
     const isWeak = game?.isWeak ?? false;
     const sessionCount = Storage.getSessions(profileId, gameInfo.id).length;
-    const trend = game?.trend;
     return `
       <div class="game-card ${isWeak ? 'game-card-weak' : ''}" data-game="${gameInfo.id}">
         <div class="gc-accent" style="background:${gameInfo.color}"></div>
@@ -223,15 +231,22 @@ createdAt: new Date().toISOString(),
       </div>
     `;
   }
+
   function runAnalysis(profileId) {
     const btn = document.getElementById('btn-analyze');
     if (btn) { btn.textContent = '⏳ 분석 중...'; btn.disabled = true; }
     setTimeout(() => {
       const result = AIAnalyzer.analyze(profileId);
-      showToast(`분석 완료! 종합 점수: ${result.overallScore}점`);
-      navigateTo('dashboard');
+      if (result) {
+        showToast(`분석 완료! 종합 점수: ${result.overallScore}점`);
+        navigateTo('dashboard');
+      } else {
+        showToast('분석 실패 (각 훈련을 최소 1회 이상 수행해야 합니다)');
+        navigateTo('hub');
+      }
     }, 1200);
   }
+
   function renderGame(root, { gameType }) {
     currentGameType = gameType;
     const profile = Storage.getCurrentProfile();
@@ -257,6 +272,7 @@ createdAt: new Date().toISOString(),
       case 'motor_response':   MotorResponseGame.init(container, problem, onComplete); break;
     }
   }
+
   function renderResult(root, { gameType, sessionData }) {
     const { accuracy, avgResponseTime, correctCount, totalRounds } = sessionData;
     const pct = Math.round(accuracy * 100);
@@ -310,6 +326,7 @@ createdAt: new Date().toISOString(),
     document.getElementById('btn-retry').addEventListener('click', () => navigateTo('game', { gameType }));
     document.getElementById('btn-hub').addEventListener('click', () => navigateTo('hub'));
   }
+
   function renderDashboard(root) {
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('home'); return; }
@@ -336,14 +353,12 @@ createdAt: new Date().toISOString(),
             </div>
           </div>
         </div>
-        <!-- 레이더 차트 -->
         <div class="dash-card">
           <div class="card-title">영역별 수행 능력</div>
           <div class="radar-wrap">
             <canvas id="radarChart" width="280" height="280"></canvas>
           </div>
         </div>
-        <!-- 게임별 상세 -->
         <div class="dash-card">
           <div class="card-title">게임별 상세 분석</div>
           <div class="game-details">
@@ -360,7 +375,7 @@ createdAt: new Date().toISOString(),
                       <div class="gd-bar" style="width:${pct || 0}%; background:${GAME_COLORS[gameType]}"></div>
                     </div>
                     <div class="gd-stats">
-                      ${pct !== null ? `<span style="color:${grade.color}">${pct}% ${grade.emoji}</span>` : '<span>데이터 부족</span>'}
+                      ${pct !== null ? `<span style="color:${grade.color}">${pct}%</span>` : '<span>데이터 부족</span>'}
                       <span>${g.sessionCount}회 수행</span>
                       <span>난이도 ${g.difficulty}</span>
                     </div>
@@ -370,7 +385,6 @@ createdAt: new Date().toISOString(),
             }).join('')}
           </div>
         </div>
-        <!-- AI 추천 -->
         ${weakProfile.recommendations?.length > 0 ? `
           <div class="dash-card">
             <div class="card-title">AI 추천</div>
@@ -395,6 +409,7 @@ createdAt: new Date().toISOString(),
     });
     drawRadarChart(weakProfile);
   }
+
   function drawRadarChart(weakProfile) {
     const canvas = document.getElementById('radarChart');
     if (!canvas) return;
@@ -420,6 +435,10 @@ createdAt: new Date().toISOString(),
       ctx.strokeStyle = 'rgba(255,255,255,0.08)';
       ctx.lineWidth = 1;
       ctx.stroke();
+      ctx.fillStyle = 'rgba(200,214,240,0.5)';
+      ctx.font = '10px Outfit';
+      ctx.textAlign = 'right';
+      ctx.fillText(v + '%', pad.left - 4, y + 4);
     });
     angles.forEach(a => {
       ctx.beginPath();
@@ -458,6 +477,7 @@ createdAt: new Date().toISOString(),
       ctx.fillText(labels[i], x, y);
     });
   }
+
   function renderReport(root) {
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('home'); return; }
@@ -466,7 +486,7 @@ createdAt: new Date().toISOString(),
     root.innerHTML = `
       <div class="screen report-screen">
         <button class="back-btn" id="btn-back">← 허브</button>
-        <h2 class="screen-title">📋 트레이닝 리포트</h2>
+        <h2 class="screen-title">트레이닝 리포트</h2>
         <div class="report-meta">${profile.name} · ${new Date().toLocaleDateString('ko-KR')} 기준</div>
         ${AIAnalyzer.GAME_TYPES.map(gameType => {
           const sessions = Storage.getSessions(profile.id, gameType);
@@ -506,6 +526,7 @@ createdAt: new Date().toISOString(),
       drawSessionChart(`chart-${gameType}`, sessions, GAME_COLORS[gameType]);
     });
   }
+
   function drawSessionChart(canvasId, sessions, color) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
@@ -555,6 +576,7 @@ createdAt: new Date().toISOString(),
       ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, x, H - 5);
     });
   }
+
   function showToast(msg) {
     const el = document.createElement('div');
     el.className = 'toast show';
@@ -562,6 +584,8 @@ createdAt: new Date().toISOString(),
     document.body.appendChild(el);
     setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 2500);
   }
+
   return { init, navigateTo, showToast };
 })();
+
 App.init();

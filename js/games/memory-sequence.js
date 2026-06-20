@@ -8,6 +8,7 @@ const MemorySequenceGame = (() => {
   let currentRound = 0;
   let onComplete = null;
   let showPhase = false; 
+
   function init(container, problemData, completeCb) {
     problem = problemData;
     userInput = [];
@@ -18,11 +19,12 @@ const MemorySequenceGame = (() => {
     render(container);
     startRound(container);
   }
+
   function render(container) {
     container.innerHTML = `
       <div class="game-wrap memory-game">
         <div class="game-header">
-          <div class="game-title">🧠 기억력 훈련</div>
+          <div class="game-title">기억력 훈련</div>
           <div class="game-meta">
             <span class="round-badge">라운드 <span id="mg-round">1</span> / ${totalRounds}</span>
             <span class="diff-badge">난이도 ${problem.difficulty}</span>
@@ -30,12 +32,10 @@ const MemorySequenceGame = (() => {
         </div>
         <p class="game-desc">${problem.description}</p>
         <div class="memory-stage">
-          <!-- 숫자 표시 영역 -->
           <div id="mg-display" class="mg-display hidden">
             <div class="mg-nums" id="mg-nums"></div>
             <div class="mg-timer-bar-wrap"><div class="mg-timer-bar" id="mg-timer-bar"></div></div>
           </div>
-          <!-- 입력 영역 -->
           <div id="mg-input-area" class="mg-input-area hidden">
             <p class="input-hint">기억한 숫자를 순서대로 입력하세요</p>
             <div class="mg-entered" id="mg-entered"></div>
@@ -46,11 +46,8 @@ const MemorySequenceGame = (() => {
               `).join('')}
             </div>
           </div>
-          <!-- 결과 표시 -->
           <div id="mg-result" class="mg-result hidden"></div>
-          <!-- 대기 화면 -->
           <div id="mg-ready" class="mg-ready">
-            <div class="ready-icon">🧠</div>
             <div class="ready-text">준비하세요!</div>
             <div class="ready-sub">숫자가 곧 표시됩니다</div>
           </div>
@@ -66,6 +63,7 @@ const MemorySequenceGame = (() => {
       btn.addEventListener('click', () => handleKeypad(btn.dataset.key, container));
     });
   }
+
   function startRound(container) {
     currentRound++;
     userInput = [];
@@ -96,6 +94,7 @@ const MemorySequenceGame = (() => {
       }, problem.displayTime);
     }, 900);
   }
+
   function handleKeypad(key, container) {
     if (showPhase) return;
     if (key === '←') {
@@ -109,6 +108,7 @@ const MemorySequenceGame = (() => {
     }
     updateEntered();
   }
+
   function updateEntered() {
     const el = document.getElementById('mg-entered');
     if (!el) return;
@@ -121,6 +121,7 @@ const MemorySequenceGame = (() => {
     }
     el.innerHTML = html;
   }
+
   function submitAnswer(container) {
     const elapsed = Date.now() - startTime;
     responseTimes.push(elapsed);
@@ -150,10 +151,10 @@ const MemorySequenceGame = (() => {
       }
     }, 1800);
   }
+
   function finishGame() {
     const accuracy = correctCount / totalRounds;
     const avgResponseTime = responseTimes.reduce((a,b)=>a+b,0) / responseTimes.length;
-    Storage.updateGlobalStats('memory_sequence', avgResponseTime);
     const sessionData = {
       accuracy, avgResponseTime,
       correctCount, totalRounds,
@@ -163,7 +164,9 @@ const MemorySequenceGame = (() => {
     if (profile) Storage.saveSession(profile.id, 'memory_sequence', sessionData);
     if (onComplete) onComplete(sessionData);
   }
+
   function showEl(id) { const e = document.getElementById(id); if(e) e.classList.remove('hidden'); }
   function hideEl(id) { const e = document.getElementById(id); if(e) e.classList.add('hidden'); }
+
   return { init };
 })();

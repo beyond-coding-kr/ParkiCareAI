@@ -6,6 +6,7 @@ const AttentionStroopGame = (() => {
   let startTime = null;
   let timerInterval = null;
   let onComplete = null;
+
   function init(container, problemData, completeCb) {
     problem = problemData;
     currentProblemIdx = 0;
@@ -15,11 +16,12 @@ const AttentionStroopGame = (() => {
     render(container);
     showProblem(container);
   }
+
   function render(container) {
     container.innerHTML = `
       <div class="game-wrap stroop-game">
         <div class="game-header">
-          <div class="game-title">🎯 집중력 훈련</div>
+          <div class="game-title">집중력 훈련</div>
           <div class="game-meta">
             <span class="round-badge">문제 <span id="sg-round">1</span> / ${problem.problems.length}</span>
             <span class="diff-badge">난이도 ${problem.difficulty}</span>
@@ -41,6 +43,7 @@ const AttentionStroopGame = (() => {
     `;
     renderProgress(container);
   }
+
   function renderProgress(container) {
     const prog = document.getElementById('sg-progress');
     if (!prog) return;
@@ -48,6 +51,7 @@ const AttentionStroopGame = (() => {
       `<div class="prog-dot" id="sg-prog-${i}"></div>`
     ).join('');
   }
+
   function showProblem(container) {
     if (currentProblemIdx >= problem.problems.length) { finishGame(); return; }
     const p = problem.problems[currentProblemIdx];
@@ -87,6 +91,7 @@ const AttentionStroopGame = (() => {
       }
     }, 100);
   }
+
   function handleAnswer(selected, p, container) {
     clearInterval(timerInterval);
     const elapsed = Date.now() - startTime;
@@ -105,10 +110,10 @@ const AttentionStroopGame = (() => {
     currentProblemIdx++;
     setTimeout(() => showProblem(container), 900);
   }
+
   function finishGame() {
     const accuracy = correctCount / problem.problems.length;
     const avgResponseTime = responseTimes.reduce((a,b)=>a+b,0) / responseTimes.length;
-    Storage.updateGlobalStats('attention_stroop', avgResponseTime);
     const sessionData = {
       accuracy, avgResponseTime,
       correctCount,
@@ -119,5 +124,6 @@ const AttentionStroopGame = (() => {
     if (profile) Storage.saveSession(profile.id, 'attention_stroop', sessionData);
     if (onComplete) onComplete(sessionData);
   }
+
   return { init };
 })();

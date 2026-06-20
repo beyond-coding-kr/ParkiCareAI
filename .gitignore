@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+instance/
+*.db
+fix_app_js.py
+fix_app_js2.py
+refactor_async.py
+.env
+*.zip

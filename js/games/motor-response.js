@@ -1,8 +1,3 @@
-/**
- * ParkiCare AI - Motor Response Game
- * 운동 훈련: 타겟 터치 반응 속도 미니게임
- */
-
 const MotorResponseGame = (() => {
   let problem = null;
   let hitCount = 0;
@@ -14,7 +9,6 @@ const MotorResponseGame = (() => {
   let onComplete = null;
   let remainingTargets = 0;
   let isFinished = false;
-
   function init(container, problemData, completeCb) {
     problem = problemData;
     hitCount = 0;
@@ -27,7 +21,6 @@ const MotorResponseGame = (() => {
     render(container);
     setTimeout(() => spawnTarget(container), 800);
   }
-
   function render(container) {
     container.innerHTML = `
       <div class="game-wrap motor-game">
@@ -39,14 +32,12 @@ const MotorResponseGame = (() => {
           </div>
         </div>
         <p class="game-desc">${problem.description}</p>
-
         <div class="motor-stage" id="mtr-stage">
           <div class="motor-overlay" id="mtr-overlay">
             <div class="motor-ready-icon">✋</div>
             <div class="motor-ready-text">준비!</div>
           </div>
         </div>
-
         <div class="motor-stats">
           <div class="mstat">
             <span class="mstat-val" id="mtr-hit">0</span>
@@ -64,18 +55,14 @@ const MotorResponseGame = (() => {
       </div>
     `;
   }
-
   function spawnTarget(container) {
     if (isFinished) return;
     const stage = document.getElementById('mtr-stage');
     const overlay = document.getElementById('mtr-overlay');
     if (overlay) overlay.remove();
     if (!stage) return;
-
-    // 이전 타겟 제거
     const old = document.getElementById('mtr-target');
     if (old) old.remove();
-
     const stageRect = stage.getBoundingClientRect();
     const size = problem.targetSize;
     const pad = size / 2 + 10;
@@ -83,7 +70,6 @@ const MotorResponseGame = (() => {
     const stageH = stage.offsetHeight || 300;
     const x = pad + Math.random() * (stageW - pad * 2);
     const y = pad + Math.random() * (stageH - pad * 2);
-
     const target = document.createElement('div');
     target.id = 'mtr-target';
     target.className = 'motor-target';
@@ -91,23 +77,17 @@ const MotorResponseGame = (() => {
       width:${size}px; height:${size}px;
       left:${x - size/2}px; top:${y - size/2}px;
     `;
-    // 타겟 안에 물결 효과
     target.innerHTML = `<div class="target-ripple"></div>`;
     stage.appendChild(target);
     currentTarget = target;
     appearTime = Date.now();
-
-    // 클릭/터치 이벤트
     target.addEventListener('click', () => handleHit(container));
     target.addEventListener('touchstart', (e) => { e.preventDefault(); handleHit(container); }, {passive:false});
-
-    // 시간 초과 처리
     clearTimeout(targetTimeout);
     targetTimeout = setTimeout(() => {
       if (!isFinished) handleMiss(container);
     }, problem.timeLimit);
   }
-
   function handleHit(container) {
     if (isFinished) return;
     clearTimeout(targetTimeout);
@@ -116,29 +96,24 @@ const MotorResponseGame = (() => {
     hitCount++;
     remainingTargets--;
     updateStats();
-
-    // 타겟 성공 애니메이션
     if (currentTarget) {
       currentTarget.classList.add('hit');
       currentTarget.innerHTML += `<div class="hit-text">+${elapsed}ms</div>`;
     }
     setTimeout(() => nextOrFinish(container), 400);
   }
-
   function handleMiss(container) {
     if (isFinished) return;
     clearTimeout(targetTimeout);
     missCount++;
     remainingTargets--;
-    responseTimes.push(problem.timeLimit); // 시간 초과 = 최대값
+    responseTimes.push(problem.timeLimit); 
     updateStats();
-
     if (currentTarget) {
       currentTarget.classList.add('miss');
     }
     setTimeout(() => nextOrFinish(container), 600);
   }
-
   function nextOrFinish(container) {
     const old = document.getElementById('mtr-target');
     if (old) old.remove();
@@ -146,7 +121,6 @@ const MotorResponseGame = (() => {
     document.getElementById('mtr-remain').textContent = remainingTargets;
     setTimeout(() => spawnTarget(container), 300);
   }
-
   function updateStats() {
     const hitEl = document.getElementById('mtr-hit');
     const missEl = document.getElementById('mtr-miss');
@@ -158,7 +132,6 @@ const MotorResponseGame = (() => {
       avgEl.textContent = avg;
     }
   }
-
   function finishGame() {
     if (isFinished) return;
     isFinished = true;
@@ -180,6 +153,5 @@ const MotorResponseGame = (() => {
     if (profile) Storage.saveSession(profile.id, 'motor_response', sessionData);
     if (onComplete) onComplete(sessionData);
   }
-
   return { init };
 })();

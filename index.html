@@ -9,29 +9,29 @@
   <meta property="og:description" content="AI가 실시간으로 분석하여 당신의 취약 영역에 맞는 맞춤형 훈련을 제공합니다">
   <title>ParkiCare AI - 파킨슨병 맞춤형 케어 시스템</title>
 
-  <!-- 폰트 -->
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- 스타일 -->
+  
   <link rel="stylesheet" href="css/style.css">
 
-  <!-- 파비콘 -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>">
+  
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%234a90e2'>P</text></svg>">
 </head>
 <body>
 
-  <!-- 배경 파티클 효과 -->
+  
   <canvas id="bg-canvas" style="
     position:fixed; inset:0; pointer-events:none; z-index:0;
     opacity:0.35;
   "></canvas>
 
-  <!-- 앱 루트 -->
+  
   <main id="app-root" style="position:relative; z-index:1;">
-    <!-- SPA 콘텐츠가 JS로 주입됩니다 -->
+    
     <div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;">
-      <div style="font-size:52px;animation:spin 1s linear infinite">🧬</div>
+      <div style="font-size:32px;font-weight:bold;color:#4a90e2;animation:spin 1s linear infinite">P</div>
       <div style="color:#8a9ab8;font-size:14px;">로딩 중...</div>
     </div>
   </main>
@@ -40,20 +40,18 @@
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 
-  <!-- 데이터/분석 모듈 -->
-  <script src="js/storage.js"></script>
-  <script src="js/ai-analyzer.js"></script>
-  <script src="js/problem-generator.js"></script>
+  
+  <script src="js/storage.js?v=2"></script>
+  <script src="js/ai-analyzer.js?v=2"></script>
+  <script src="js/problem-generator.js?v=2"></script>
+  <script src="js/games/memory-sequence.js?v=2"></script>
+  <script src="js/games/attention-stroop.js?v=2"></script>
+  <script src="js/games/motor-response.js?v=2"></script>
 
-  <!-- 게임 모듈 -->
-  <script src="js/games/memory-sequence.js"></script>
-  <script src="js/games/attention-stroop.js"></script>
-  <script src="js/games/motor-response.js"></script>
+  
+  <script src="js/app.js?v=2"></script>
 
-  <!-- 메인 앱 -->
-  <script src="js/app.js"></script>
-
-  <!-- 배경 파티클 -->
+  
   <script>
     (function() {
       const canvas = document.getElementById('bg-canvas');

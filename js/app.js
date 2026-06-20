@@ -1,13 +1,6 @@
-/**
- * ParkiCare AI - Main App
- * SPA 라우팅, 화면 전환, 전체 상태 관리
- */
-
 const App = (() => {
-  // ─── 상태 ─────────────────────────────────────────────────────
   let currentScreen = 'home';
   let currentGameType = null;
-
   const GAME_INFO = {
     memory_sequence: {
       id: 'memory_sequence', label: '기억력 훈련', emoji: '🧠',
@@ -25,15 +18,11 @@ const App = (() => {
       color: '#00FF94',
     },
   };
-
-  // ─── 초기화 ───────────────────────────────────────────────────
   function init() {
     document.addEventListener('DOMContentLoaded', () => {
       navigateTo('home');
     });
   }
-
-  // ─── 화면 전환 ────────────────────────────────────────────────
   function navigateTo(screen, params = {}) {
     currentScreen = screen;
     const root = document.getElementById('app-root');
@@ -45,7 +34,6 @@ const App = (() => {
       root.style.transform = 'translateY(0)';
     }, 180);
   }
-
   function renderScreen(screen, params, root) {
     switch (screen) {
       case 'home':       renderHome(root); break;
@@ -58,12 +46,9 @@ const App = (() => {
       default:           renderHome(root);
     }
   }
-
-  // ─── 홈 화면 ──────────────────────────────────────────────────
   function renderHome(root) {
     const profiles = Storage.getProfiles();
     const current = Storage.getCurrentProfile();
-
     root.innerHTML = `
       <div class="screen home-screen">
         <div class="home-hero">
@@ -76,7 +61,6 @@ const App = (() => {
           </div>
           <div class="hero-badge">AI 기반 개인화 트레이닝</div>
         </div>
-
         ${profiles.length === 0 ? `
           <div class="empty-state">
             <div class="empty-icon">👤</div>
@@ -90,7 +74,6 @@ const App = (() => {
           </div>
           <button class="btn btn-outline mt-2" id="btn-add-profile">+ 프로필 추가</button>
         `}
-
         <div class="home-features">
           <div class="feature-item"><span>🧠</span><span>AI 취약 영역 분석</span></div>
           <div class="feature-item"><span>🎮</span><span>미니게임 형식 훈련</span></div>
@@ -98,10 +81,8 @@ const App = (() => {
         </div>
       </div>
     `;
-
     document.getElementById('btn-create-first')?.addEventListener('click', () => navigateTo('profile-create'));
     document.getElementById('btn-add-profile')?.addEventListener('click', () => navigateTo('profile-create'));
-
     document.querySelectorAll('.profile-card').forEach(card => {
       card.addEventListener('click', () => {
         const id = card.dataset.id;
@@ -109,7 +90,6 @@ const App = (() => {
         navigateTo('hub');
       });
     });
-
     document.querySelectorAll('.profile-delete-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -120,7 +100,6 @@ const App = (() => {
       });
     });
   }
-
   function profileCard(p, isActive) {
     const weakProfile = Storage.getWeakProfile(p.id);
     const score = weakProfile?.overallScore ?? null;
@@ -139,7 +118,6 @@ const App = (() => {
       </div>
     `;
   }
-
   const STAGE_LABELS = {
     stage1: '초기 단계', stage2: '경증', stage3: '중등도',
     stage4: '중증', stage5: '최중증',
@@ -147,14 +125,11 @@ const App = (() => {
   const AVATAR_COLORS = [
     '#00D4FF','#7B2FBE','#00FF94','#FF6B6B','#FFB800','#FF69B4',
   ];
-
-  // ─── 프로필 생성 ──────────────────────────────────────────────
   function renderProfileCreate(root, params) {
     root.innerHTML = `
       <div class="screen profile-screen">
         <button class="back-btn" id="btn-back">← 돌아가기</button>
         <h2 class="screen-title">새 프로필 만들기</h2>
-
         <form class="profile-form" id="profile-form">
           <div class="form-group">
             <label>이름</label>
@@ -190,9 +165,7 @@ const App = (() => {
         </form>
       </div>
     `;
-
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('home'));
-
     let selectedColor = AVATAR_COLORS[0];
     document.querySelectorAll('.color-opt').forEach(opt => {
       opt.addEventListener('click', () => {
@@ -201,7 +174,6 @@ const App = (() => {
         selectedColor = opt.dataset.color;
       });
     });
-
     document.getElementById('profile-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('f-name').value.trim();
@@ -220,14 +192,11 @@ const App = (() => {
       navigateTo('hub');
     });
   }
-
-  // ─── 트레이닝 허브 ────────────────────────────────────────────
   function renderHub(root) {
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('home'); return; }
     const weakProfile = Storage.getWeakProfile(profile.id);
     const grade = weakProfile?.overallScore != null ? AIAnalyzer.getGrade(weakProfile.overallScore) : null;
-
     root.innerHTML = `
       <div class="screen hub-screen">
         <div class="hub-header">
@@ -241,7 +210,6 @@ const App = (() => {
           </div>
           <button class="icon-btn" id="btn-dashboard" title="AI 대시보드">📊</button>
         </div>
-
         ${grade ? `
           <div class="overall-card" style="--accent:${grade.color}">
             <div class="overall-label">종합 점수</div>
@@ -253,24 +221,20 @@ const App = (() => {
             <span>💡</span> 각 훈련을 3회 이상 수행하면 AI 분석이 시작됩니다
           </div>
         `}
-
         <div class="section-title">오늘의 훈련</div>
         <div class="game-cards">
           ${Object.values(GAME_INFO).map(g => gameCard(g, weakProfile, profile.id)).join('')}
         </div>
-
         <div class="hub-actions">
           <button class="btn btn-outline" id="btn-report">📋 리포트 보기</button>
           <button class="btn btn-ai" id="btn-analyze">🤖 AI 분석 실행</button>
         </div>
       </div>
     `;
-
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('home'));
     document.getElementById('btn-dashboard').addEventListener('click', () => navigateTo('dashboard'));
     document.getElementById('btn-report').addEventListener('click', () => navigateTo('report'));
     document.getElementById('btn-analyze').addEventListener('click', () => runAnalysis(profile.id));
-
     document.querySelectorAll('.game-card').forEach(card => {
       card.addEventListener('click', () => {
         const gameType = card.dataset.game;
@@ -278,7 +242,6 @@ const App = (() => {
       });
     });
   }
-
   function gameCard(gameInfo, weakProfile, profileId) {
     const game = weakProfile?.games?.[gameInfo.id];
     const isWeak = game?.isWeak ?? false;
@@ -302,7 +265,6 @@ const App = (() => {
       </div>
     `;
   }
-
   function runAnalysis(profileId) {
     const btn = document.getElementById('btn-analyze');
     if (btn) { btn.textContent = '⏳ 분석 중...'; btn.disabled = true; }
@@ -312,13 +274,10 @@ const App = (() => {
       navigateTo('dashboard');
     }, 1200);
   }
-
-  // ─── 게임 화면 ────────────────────────────────────────────────
   function renderGame(root, { gameType }) {
     currentGameType = gameType;
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('hub'); return; }
-
     root.innerHTML = `
       <div class="screen game-screen">
         <button class="back-btn" id="btn-back">← 허브</button>
@@ -326,32 +285,25 @@ const App = (() => {
       </div>
     `;
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('hub'));
-
-    // 취약 프로파일로 문제 생성
     const weakProfile = Storage.getWeakProfile(profile.id);
     const problem = weakProfile
       ? ProblemGenerator.generateForProfile(weakProfile, gameType)
       : ProblemGenerator.generateDefault(gameType);
-
     const container = document.getElementById('game-container');
     const onComplete = (sessionData) => {
       setTimeout(() => navigateTo('result', { gameType, sessionData }), 600);
     };
-
     switch (gameType) {
       case 'memory_sequence':  MemorySequenceGame.init(container, problem, onComplete); break;
       case 'attention_stroop': AttentionStroopGame.init(container, problem, onComplete); break;
       case 'motor_response':   MotorResponseGame.init(container, problem, onComplete); break;
     }
   }
-
-  // ─── 결과 화면 ────────────────────────────────────────────────
   function renderResult(root, { gameType, sessionData }) {
     const { accuracy, avgResponseTime, correctCount, totalRounds } = sessionData;
     const pct = Math.round(accuracy * 100);
     const grade = AIAnalyzer.getGrade(pct);
     const GAME_LABELS = { memory_sequence:'기억력 훈련', attention_stroop:'집중력 훈련', motor_response:'운동 훈련' };
-
     root.innerHTML = `
       <div class="screen result-screen">
         <div class="result-hero">
@@ -370,7 +322,6 @@ const App = (() => {
             </div>
           </div>
         </div>
-
         <div class="result-stats">
           <div class="rstat">
             <div class="rstat-val">${correctCount}/${totalRounds}</div>
@@ -385,45 +336,36 @@ const App = (() => {
             <div class="rstat-label">난이도</div>
           </div>
         </div>
-
         <div class="result-message ${pct >= 70 ? 'msg-good' : 'msg-warn'}">
           ${pct >= 90 ? '🌟 완벽합니다! 탁월한 수행 능력이에요.' :
             pct >= 70 ? '✅ 잘 하셨어요! 꾸준히 유지하세요.' :
             '💪 조금 더 노력해봐요. AI가 맞춤 문제를 준비했어요!'}
         </div>
-
         <div class="result-actions">
           <button class="btn btn-outline" id="btn-retry">다시 하기</button>
           <button class="btn btn-primary" id="btn-hub">허브로 돌아가기</button>
         </div>
       </div>
     `;
-
     setTimeout(() => {
       document.querySelector('.ring-progress')?.classList.add('animated');
     }, 100);
-
     document.getElementById('btn-retry').addEventListener('click', () => navigateTo('game', { gameType }));
     document.getElementById('btn-hub').addEventListener('click', () => navigateTo('hub'));
   }
-
-  // ─── AI 대시보드 ──────────────────────────────────────────────
   function renderDashboard(root) {
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('home'); return; }
     const weakProfile = Storage.getWeakProfile(profile.id) || AIAnalyzer.analyze(profile.id);
-
     const GAME_LABELS = { memory_sequence:'기억력', attention_stroop:'집중력', motor_response:'운동' };
     const GAME_COLORS = { memory_sequence:'#00D4FF', attention_stroop:'#7B2FBE', motor_response:'#00FF94' };
     const GAME_EMOJIS = { memory_sequence:'🧠', attention_stroop:'🎯', motor_response:'✋' };
-
     root.innerHTML = `
       <div class="screen dashboard-screen">
         <div class="dash-header">
           <button class="back-btn" id="btn-back">← 허브</button>
           <h2 class="screen-title">AI 분석 대시보드</h2>
         </div>
-
         <div class="dash-overall">
           <div class="dash-score">
             <div class="dash-score-val" style="color:${weakProfile.overallScore > 0 ? AIAnalyzer.getGrade(weakProfile.overallScore).color : '#888'}">${weakProfile.overallScore || '-'}</div>
@@ -438,7 +380,6 @@ const App = (() => {
             </div>
           </div>
         </div>
-
         <!-- 레이더 차트 -->
         <div class="dash-card">
           <div class="card-title">영역별 수행 능력</div>
@@ -446,7 +387,6 @@ const App = (() => {
             <canvas id="radarChart" width="280" height="280"></canvas>
           </div>
         </div>
-
         <!-- 게임별 상세 -->
         <div class="dash-card">
           <div class="card-title">게임별 상세 분석</div>
@@ -475,7 +415,6 @@ const App = (() => {
             }).join('')}
           </div>
         </div>
-
         <!-- AI 추천 -->
         ${weakProfile.recommendations?.length > 0 ? `
           <div class="dash-card">
@@ -488,18 +427,19 @@ const App = (() => {
             `).join('')}
           </div>
         ` : ''}
-
         <button class="btn btn-primary mt-2" id="btn-train">맞춤 훈련 시작</button>
       </div>
     `;
-
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('hub'));
-    document.getElementById('btn-train').addEventListener('click', () => navigateTo('hub'));
-
-    // 레이더 차트 그리기
+    document.getElementById('btn-train').addEventListener('click', () => {
+      let targetGame = 'memory_sequence';
+      if (weakProfile.weakAreas && weakProfile.weakAreas.length > 0) {
+        targetGame = weakProfile.weakAreas[0];
+      }
+      navigateTo('game', { gameType: targetGame });
+    });
     drawRadarChart(weakProfile);
   }
-
   function drawRadarChart(weakProfile) {
     const canvas = document.getElementById('radarChart');
     if (!canvas) return;
@@ -513,10 +453,7 @@ const App = (() => {
       return g?.accuracy !== null && g?.accuracy != null ? g.accuracy * 100 : 0;
     });
     const angles = labels.map((_, i) => (Math.PI * 2 * i / labels.length) - Math.PI / 2);
-
     ctx.clearRect(0, 0, W, H);
-
-    // 배경 거미줄
     [100, 75, 50, 25].forEach(pct => {
       ctx.beginPath();
       angles.forEach((a, i) => {
@@ -529,8 +466,6 @@ const App = (() => {
       ctx.lineWidth = 1;
       ctx.stroke();
     });
-
-    // 축 선
     angles.forEach(a => {
       ctx.beginPath();
       ctx.moveTo(cx, cy);
@@ -538,8 +473,6 @@ const App = (() => {
       ctx.strokeStyle = 'rgba(255,255,255,0.12)';
       ctx.stroke();
     });
-
-    // 데이터 영역
     ctx.beginPath();
     angles.forEach((a, i) => {
       const x = cx + r * (values[i]/100) * Math.cos(a);
@@ -552,8 +485,6 @@ const App = (() => {
     ctx.strokeStyle = '#00D4FF';
     ctx.lineWidth = 2;
     ctx.stroke();
-
-    // 데이터 점
     angles.forEach((a, i) => {
       const x = cx + r * (values[i]/100) * Math.cos(a);
       const y = cy + r * (values[i]/100) * Math.sin(a);
@@ -562,8 +493,6 @@ const App = (() => {
       ctx.fillStyle = '#00D4FF';
       ctx.fill();
     });
-
-    // 레이블
     ctx.font = 'bold 13px Outfit, sans-serif';
     ctx.fillStyle = '#c8d6f0';
     ctx.textAlign = 'center';
@@ -574,20 +503,16 @@ const App = (() => {
       ctx.fillText(labels[i], x, y);
     });
   }
-
-  // ─── 리포트 화면 ──────────────────────────────────────────────
   function renderReport(root) {
     const profile = Storage.getCurrentProfile();
     if (!profile) { navigateTo('home'); return; }
     const GAME_LABELS = { memory_sequence:'기억력 훈련', attention_stroop:'집중력 훈련', motor_response:'운동 훈련' };
     const GAME_COLORS = { memory_sequence:'#00D4FF', attention_stroop:'#7B2FBE', motor_response:'#00FF94' };
-
     root.innerHTML = `
       <div class="screen report-screen">
         <button class="back-btn" id="btn-back">← 허브</button>
         <h2 class="screen-title">📋 트레이닝 리포트</h2>
         <div class="report-meta">${profile.name} · ${new Date().toLocaleDateString('ko-KR')} 기준</div>
-
         ${AIAnalyzer.GAME_TYPES.map(gameType => {
           const sessions = Storage.getSessions(profile.id, gameType);
           const recent = sessions.slice(-7);
@@ -619,17 +544,13 @@ const App = (() => {
         }).join('')}
       </div>
     `;
-
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('hub'));
-
-    // 세션 차트 그리기
     AIAnalyzer.GAME_TYPES.forEach(gameType => {
       const sessions = Storage.getSessions(profile.id, gameType).slice(-7);
       if (sessions.length === 0) return;
       drawSessionChart(`chart-${gameType}`, sessions, GAME_COLORS[gameType]);
     });
   }
-
   function drawSessionChart(canvasId, sessions, color) {
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
@@ -641,10 +562,7 @@ const App = (() => {
     const gH = H - pad.top - pad.bottom;
     const values = sessions.map(s => Math.round(s.accuracy * 100));
     const n = values.length;
-
     ctx.clearRect(0, 0, W, H);
-
-    // 배경 그리드
     [0,25,50,75,100].forEach(v => {
       const y = pad.top + gH * (1 - v/100);
       ctx.beginPath();
@@ -658,8 +576,6 @@ const App = (() => {
       ctx.textAlign = 'right';
       ctx.fillText(v + '%', pad.left - 4, y + 4);
     });
-
-    // 선 그래프
     ctx.beginPath();
     values.forEach((v, i) => {
       const x = pad.left + (i / Math.max(n-1,1)) * gW;
@@ -670,8 +586,6 @@ const App = (() => {
     ctx.lineWidth = 2.5;
     ctx.lineJoin = 'round';
     ctx.stroke();
-
-    // 데이터 점 + X축 레이블
     values.forEach((v, i) => {
       const x = pad.left + (i / Math.max(n-1,1)) * gW;
       const y = pad.top + gH * (1 - v/100);
@@ -686,8 +600,6 @@ const App = (() => {
       ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, x, H - 5);
     });
   }
-
-  // ─── Toast 알림 ───────────────────────────────────────────────
   function showToast(msg) {
     const el = document.createElement('div');
     el.className = 'toast show';
@@ -695,8 +607,6 @@ const App = (() => {
     document.body.appendChild(el);
     setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 400); }, 2500);
   }
-
   return { init, navigateTo, showToast };
 })();
-
 App.init();

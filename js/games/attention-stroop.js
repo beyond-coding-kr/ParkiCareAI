@@ -74,7 +74,7 @@ const AttentionStroopGame = (() => {
     const bar = document.getElementById('sg-time-bar');
     bar.style.transition = 'none';
     bar.style.width = '100%';
-    bar.style.background = 'linear-gradient(90deg, #00D4FF, #7B2FBE)';
+    bar.style.background = '#4a90e2';
     requestAnimationFrame(() => {
       bar.style.transition = `width ${p.timeLimit}ms linear`;
       bar.style.width = '0%';

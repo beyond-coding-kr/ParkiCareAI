@@ -1,9 +1,8 @@
 const Storage = (() => {
   const BASE_URL = '/api';
-
   function requestSync(endpoint, method = 'GET', body = null) {
     const xhr = new XMLHttpRequest();
-    xhr.open(method, BASE_URL + endpoint, false); // false makes it synchronous
+    xhr.open(method, BASE_URL + endpoint, false); 
     xhr.setRequestHeader('Content-Type', 'application/json');
     try {
       if (body) {
@@ -20,52 +19,41 @@ const Storage = (() => {
     }
     return null;
   }
-
   function getProfiles() {
     return requestSync('/profiles') || [];
   }
-
   function saveProfile(profile) {
     return requestSync('/profiles', 'POST', profile);
   }
-
   function deleteProfile(id) {
     return requestSync(`/profiles/${id}`, 'DELETE');
   }
-
   function getCurrentProfile() {
     const id = localStorage.getItem('parkicare_current_profile');
     if (!id) return null;
     const profiles = getProfiles();
     return profiles.find(p => p.id === id) || null;
   }
-
   function setCurrentProfile(id) {
     localStorage.setItem('parkicare_current_profile', id);
   }
-
   function getSessions(profileId, gameType) {
     return requestSync(`/sessions/${profileId}/${gameType}`) || [];
   }
-
   function saveSession(profileId, gameType, sessionData) {
     return requestSync(`/sessions/${profileId}/${gameType}`, 'POST', sessionData);
   }
-
   function getWeakProfile(profileId) {
     return requestSync(`/analysis/${profileId}`);
   }
-
   function runAnalysis(profileId) {
     return requestSync(`/analysis/${profileId}`, 'POST');
   }
-
   function getProblem(gameType, profileId = null, accessible = true) {
     let url = `/problems/${gameType}?accessible=${accessible}`;
     if (profileId) url += `&profileId=${profileId}`;
     return requestSync(url);
   }
-
   return {
     getProfiles, saveProfile, deleteProfile,
     getCurrentProfile, setCurrentProfile,

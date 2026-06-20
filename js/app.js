@@ -3,18 +3,15 @@ const App = (() => {
   let currentGameType = null;
   const GAME_INFO = {
     memory_sequence: {
-      id: 'memory_sequence', label: '기억력 훈련', emoji: '🧠',
-      desc: '숫자 배열을 기억하고 순서대로 입력',
+      id: 'memory_sequence', label: '기억력 훈련', desc: '숫자 배열을 기억하고 순서대로 입력',
       color: '#00D4FF',
     },
     attention_stroop: {
-      id: 'attention_stroop', label: '집중력 훈련', emoji: '🎯',
-      desc: '글자 색상을 빠르게 판별',
+      id: 'attention_stroop', label: '집중력 훈련', desc: '글자 색상을 빠르게 판별',
       color: '#7B2FBE',
     },
     motor_response: {
-      id: 'motor_response', label: '운동 훈련', emoji: '✋',
-      desc: '나타나는 타겟을 신속하게 터치',
+      id: 'motor_response', label: '운동 훈련', desc: '나타나는 타겟을 신속하게 터치',
       color: '#00FF94',
     },
   };
@@ -53,7 +50,6 @@ const App = (() => {
       <div class="screen home-screen">
         <div class="home-hero">
           <div class="logo-wrap">
-            <div class="logo-icon">🧬</div>
             <div>
               <h1 class="logo-title">ParkiCare AI</h1>
               <p class="logo-sub">파킨슨병 맞춤형 인지·운동 케어 시스템</p>
@@ -63,7 +59,6 @@ const App = (() => {
         </div>
         ${profiles.length === 0 ? `
           <div class="empty-state">
-            <div class="empty-icon">👤</div>
             <p>등록된 환자 프로필이 없습니다</p>
             <button class="btn btn-primary" id="btn-create-first">새 프로필 만들기</button>
           </div>
@@ -75,9 +70,9 @@ const App = (() => {
           <button class="btn btn-outline mt-2" id="btn-add-profile">+ 프로필 추가</button>
         `}
         <div class="home-features">
-          <div class="feature-item"><span>🧠</span><span>AI 취약 영역 분석</span></div>
-          <div class="feature-item"><span>🎮</span><span>미니게임 형식 훈련</span></div>
-          <div class="feature-item"><span>📊</span><span>맞춤형 리포트</span></div>
+          <div class="feature-item"><span>AI 취약 영역 분석</span></div>
+          <div class="feature-item"><span>미니게임 형식 훈련</span></div>
+          <div class="feature-item"><span>맞춤형 리포트</span></div>
         </div>
       </div>
     `;
@@ -106,13 +101,13 @@ const App = (() => {
     const grade = score !== null ? AIAnalyzer.getGrade(score) : null;
     return `
       <div class="profile-card ${isActive ? 'active' : ''}" data-id="${p.id}">
-        <div class="profile-avatar" style="background:${p.color}">${p.name[0]}</div>
+        <div class="profile-avatar" style="background:#4a90e2">${p.name[0]}</div>
         <div class="profile-info">
           <div class="profile-name">${p.name}</div>
           <div class="profile-meta">${p.age}세 · ${STAGE_LABELS[p.stage]}</div>
         </div>
         <div class="profile-score">
-          ${score !== null ? `<span style="color:${grade.color}">${grade.emoji} ${score}</span>` : '<span class="score-none">미분석</span>'}
+          ${score !== null ? `<span style="color:${grade.color}">${score}</span>` : '<span class="score-none">미분석</span>'}
         </div>
         <button class="profile-delete-btn" data-id="${p.id}" title="삭제">×</button>
       </div>
@@ -139,53 +134,20 @@ const App = (() => {
             <label>나이</label>
             <input type="number" id="f-age" placeholder="나이" min="3" max="100" required>
           </div>
-          <div class="form-group">
-            <label>증상 단계</label>
-            <select id="f-stage">
-              <option value="stage1">1단계 - 초기 (증상 경미)</option>
-              <option value="stage2">2단계 - 경증</option>
-              <option value="stage3">3단계 - 중등도</option>
-              <option value="stage4">4단계 - 중증</option>
-              <option value="stage5">5단계 - 최중증</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>진단 시기</label>
-            <input type="text" id="f-diagnosis" placeholder="예: 2023년 3월">
-          </div>
-          <div class="form-group">
-            <label>아바타 색상</label>
-            <div class="color-picker" id="color-picker">
-              ${AVATAR_COLORS.map((c,i) => `
-                <div class="color-opt ${i===0?'selected':''}" data-color="${c}" style="background:${c}"></div>
-              `).join('')}
-            </div>
-          </div>
           <button type="submit" class="btn btn-primary">프로필 생성</button>
         </form>
       </div>
     `;
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('home'));
-    let selectedColor = AVATAR_COLORS[0];
-    document.querySelectorAll('.color-opt').forEach(opt => {
-      opt.addEventListener('click', () => {
-        document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        selectedColor = opt.dataset.color;
-      });
-    });
     document.getElementById('profile-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const name = document.getElementById('f-name').value.trim();
       const age = parseInt(document.getElementById('f-age').value);
-      const stage = document.getElementById('f-stage').value;
-      const diagnosis = document.getElementById('f-diagnosis').value.trim();
       if (!name || !age) return;
       const profile = {
         id: 'p_' + Date.now(),
-        name, age, stage, diagnosis,
-        color: selectedColor,
-        createdAt: new Date().toISOString(),
+        name, age, color: '#4a90e2',
+createdAt: new Date().toISOString(),
       };
       Storage.saveProfile(profile);
       Storage.setCurrentProfile(profile.id);
@@ -202,23 +164,22 @@ const App = (() => {
         <div class="hub-header">
           <button class="back-btn" id="btn-back">← 홈</button>
           <div class="hub-profile">
-            <div class="hub-avatar" style="background:${profile.color}">${profile.name[0]}</div>
+            <div class="hub-avatar" style="background:#4a90e2">${profile.name[0]}</div>
             <div>
               <div class="hub-name">${profile.name}</div>
-              <div class="hub-stage">${STAGE_LABELS[profile.stage]}</div>
             </div>
           </div>
-          <button class="icon-btn" id="btn-dashboard" title="AI 대시보드">📊</button>
+          <button class="icon-btn" id="btn-dashboard" title="AI 대시보드">대시보드</button>
         </div>
         ${grade ? `
           <div class="overall-card" style="--accent:${grade.color}">
             <div class="overall-label">종합 점수</div>
             <div class="overall-score" style="color:${grade.color}">${weakProfile.overallScore}</div>
-            <div class="overall-grade">${grade.emoji} ${grade.label}</div>
+            <div class="overall-grade">${grade.label}</div>
           </div>
         ` : `
           <div class="info-banner">
-            <span>💡</span> 각 훈련을 3회 이상 수행하면 AI 분석이 시작됩니다
+            각 훈련을 3회 이상 수행하면 AI 분석이 시작됩니다
           </div>
         `}
         <div class="section-title">오늘의 훈련</div>
@@ -226,8 +187,8 @@ const App = (() => {
           ${Object.values(GAME_INFO).map(g => gameCard(g, weakProfile, profile.id)).join('')}
         </div>
         <div class="hub-actions">
-          <button class="btn btn-outline" id="btn-report">📋 리포트 보기</button>
-          <button class="btn btn-ai" id="btn-analyze">🤖 AI 분석 실행</button>
+          <button class="btn btn-outline" id="btn-report">리포트 보기</button>
+          <button class="btn btn-ai" id="btn-analyze">AI 분석 실행</button>
         </div>
       </div>
     `;
@@ -247,18 +208,15 @@ const App = (() => {
     const isWeak = game?.isWeak ?? false;
     const sessionCount = Storage.getSessions(profileId, gameInfo.id).length;
     const trend = game?.trend;
-    const trendIcon = trend === 'improving' ? '📈' : trend === 'declining' ? '📉' : trend === 'stable' ? '➡️' : '';
     return `
       <div class="game-card ${isWeak ? 'game-card-weak' : ''}" data-game="${gameInfo.id}">
         <div class="gc-accent" style="background:${gameInfo.color}"></div>
-        <div class="gc-emoji">${gameInfo.emoji}</div>
         <div class="gc-info">
           <div class="gc-title">${gameInfo.label}</div>
           <div class="gc-desc">${gameInfo.desc}</div>
           <div class="gc-meta">
             <span class="session-count">${sessionCount}회 수행</span>
-            ${isWeak ? '<span class="weak-badge">⚠️ 집중 필요</span>' : ''}
-            ${trendIcon ? `<span>${trendIcon}</span>` : ''}
+            ${isWeak ? '<span class="weak-badge">집중 필요</span>' : ''}
           </div>
         </div>
         <div class="gc-arrow">→</div>
@@ -307,7 +265,6 @@ const App = (() => {
     root.innerHTML = `
       <div class="screen result-screen">
         <div class="result-hero">
-          <div class="result-grade-emoji">${grade.emoji}</div>
           <h2 class="result-title">${GAME_LABELS[gameType]} 완료!</h2>
           <div class="result-score-ring">
             <svg viewBox="0 0 120 120" class="ring-svg">
@@ -337,9 +294,9 @@ const App = (() => {
           </div>
         </div>
         <div class="result-message ${pct >= 70 ? 'msg-good' : 'msg-warn'}">
-          ${pct >= 90 ? '🌟 완벽합니다! 탁월한 수행 능력이에요.' :
-            pct >= 70 ? '✅ 잘 하셨어요! 꾸준히 유지하세요.' :
-            '💪 조금 더 노력해봐요. AI가 맞춤 문제를 준비했어요!'}
+          ${pct >= 90 ? '완벽합니다! 탁월한 수행 능력이에요.' :
+            pct >= 70 ? '잘 하셨어요! 꾸준히 유지하세요.' :
+            '조금 더 노력해봐요. AI가 맞춤 문제를 준비했어요!'}
         </div>
         <div class="result-actions">
           <button class="btn btn-outline" id="btn-retry">다시 하기</button>
@@ -359,7 +316,6 @@ const App = (() => {
     const weakProfile = Storage.getWeakProfile(profile.id) || AIAnalyzer.analyze(profile.id);
     const GAME_LABELS = { memory_sequence:'기억력', attention_stroop:'집중력', motor_response:'운동' };
     const GAME_COLORS = { memory_sequence:'#00D4FF', attention_stroop:'#7B2FBE', motor_response:'#00FF94' };
-    const GAME_EMOJIS = { memory_sequence:'🧠', attention_stroop:'🎯', motor_response:'✋' };
     root.innerHTML = `
       <div class="screen dashboard-screen">
         <div class="dash-header">
@@ -375,8 +331,8 @@ const App = (() => {
             <div>분석: ${new Date(weakProfile.analyzedAt||Date.now()).toLocaleDateString('ko-KR')}</div>
             <div class="weak-summary">
               ${weakProfile.weakAreas?.length > 0
-                ? `⚠️ 집중 훈련 필요: ${weakProfile.weakAreas.map(a=>GAME_LABELS[a]).join(', ')}`
-                : '✅ 모든 영역 양호'}
+                ? `집중 훈련 필요: ${weakProfile.weakAreas.map(a=>GAME_LABELS[a]).join(', ')}`
+                : '모든 영역 양호'}
             </div>
           </div>
         </div>
@@ -398,7 +354,6 @@ const App = (() => {
               const grade = pct !== null ? AIAnalyzer.getGrade(pct) : null;
               return `
                 <div class="gd-item ${g.isWeak ? 'gd-weak' : ''}">
-                  <div class="gd-emoji">${GAME_EMOJIS[gameType]}</div>
                   <div class="gd-body">
                     <div class="gd-title">${GAME_LABELS[gameType]}</div>
                     <div class="gd-bar-wrap">
@@ -418,7 +373,7 @@ const App = (() => {
         <!-- AI 추천 -->
         ${weakProfile.recommendations?.length > 0 ? `
           <div class="dash-card">
-            <div class="card-title">🤖 AI 추천</div>
+            <div class="card-title">AI 추천</div>
             ${weakProfile.recommendations.map(r => `
               <div class="rec-item rec-${r.priority}">
                 <div class="rec-dot"></div>

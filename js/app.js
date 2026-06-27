@@ -253,11 +253,9 @@ const App = (() => {
     if (!profile) { navigateTo('hub'); return; }
     root.innerHTML = `
       <div class="screen game-screen">
-        <button class="back-btn" id="btn-back">← 허브</button>
         <div id="game-container" class="game-container"></div>
       </div>
     `;
-    document.getElementById('btn-back').addEventListener('click', () => navigateTo('hub'));
     const weakProfile = Storage.getWeakProfile(profile.id);
     const problem = weakProfile
       ? ProblemGenerator.generateForProfile(weakProfile, gameType)

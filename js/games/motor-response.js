@@ -91,30 +91,30 @@ const MotorResponseGame = (() => {
   }
 
   function handleHit(container) {
-    if (isFinished) return;
+    if (isFinished || !currentTarget) return;
+    const target = currentTarget;
+    currentTarget = null;
     clearTimeout(targetTimeout);
     const elapsed = Date.now() - appearTime;
     responseTimes.push(elapsed);
     hitCount++;
     remainingTargets--;
     updateStats();
-    if (currentTarget) {
-      currentTarget.classList.add('hit');
-      currentTarget.innerHTML += `<div class="hit-text">+${elapsed}ms</div>`;
-    }
+    target.classList.add('hit');
+    target.innerHTML += `<div class="hit-text">+${elapsed}ms</div>`;
     setTimeout(() => nextOrFinish(container), 400);
   }
 
   function handleMiss(container) {
-    if (isFinished) return;
+    if (isFinished || !currentTarget) return;
+    const target = currentTarget;
+    currentTarget = null;
     clearTimeout(targetTimeout);
     missCount++;
     remainingTargets--;
     responseTimes.push(problem.timeLimit); 
     updateStats();
-    if (currentTarget) {
-      currentTarget.classList.add('miss');
-    }
+    target.classList.add('miss');
     setTimeout(() => nextOrFinish(container), 600);
   }
 

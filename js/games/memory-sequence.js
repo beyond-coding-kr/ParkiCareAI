@@ -123,6 +123,7 @@ const MemorySequenceGame = (() => {
   }
 
   function submitAnswer(container) {
+    showPhase = true; // Lock further keypad inputs
     const elapsed = Date.now() - startTime;
     responseTimes.push(elapsed);
     const isCorrect = userInput.length === problem.sequence.length &&

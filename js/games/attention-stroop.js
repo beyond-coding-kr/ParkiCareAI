@@ -93,7 +93,9 @@ const AttentionStroopGame = (() => {
   }
 
   function handleAnswer(selected, p, container) {
+    if (timerInterval === null) return;
     clearInterval(timerInterval);
+    timerInterval = null;
     const elapsed = Date.now() - startTime;
     responseTimes.push(Math.min(elapsed, p.timeLimit));
     const isCorrect = selected === p.correctAnswer;

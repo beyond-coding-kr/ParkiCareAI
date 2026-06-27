@@ -279,7 +279,7 @@ const App = (() => {
     root.innerHTML = `
       <div class="screen result-screen">
         <div class="result-hero">
-          <h2 class="result-title">${GAME_LABELS[gameType]} 완료!</h2>
+          <h2 class="result-title">${GAME_LABELS[gameType]} 결과</h2>
           <div class="result-score-ring">
             <svg viewBox="0 0 120 120" class="ring-svg">
               <circle cx="60" cy="60" r="50" fill="none" stroke="#1a1f35" stroke-width="10"/>

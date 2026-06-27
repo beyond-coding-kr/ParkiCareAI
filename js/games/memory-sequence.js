@@ -48,8 +48,8 @@ const MemorySequenceGame = (() => {
           </div>
           <div id="mg-result" class="mg-result hidden"></div>
           <div id="mg-ready" class="mg-ready">
-            <div class="ready-text">준비하세요!</div>
-            <div class="ready-sub">숫자가 곧 표시됩니다</div>
+            <div class="ready-text">곧 숫자가 표시됩니다.</div>
+            <div class="ready-sub">화면에 나오는 숫자를 기억해 주세요.</div>
           </div>
         </div>
         <div class="progress-row">

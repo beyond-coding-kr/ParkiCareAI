@@ -75,7 +75,7 @@ def generate_recommendations(weak_profile):
         recs.append({
             'type': area,
             'priority': 'high',
-            'message': f"{GAME_LABELS[area]}에서 취약점이 발견되었습니다. 난이도 {game['recommendedDifficulty']}로 집중 훈련을 권장합니다.",
+            'message': f"{GAME_LABELS[area]}에서 취약점이 발견되었습니다. 난이도 {game['recommendedDifficulty']} 단계 집중 훈련을 권장합니다.",
             'label': GAME_LABELS[area],
         })
 

@@ -78,7 +78,7 @@ const MotorResponseGame = (() => {
       width:${size}px; height:${size}px;
       left:${x - size/2}px; top:${y - size/2}px;
     `;
-    target.innerHTML = `<div class="target-ripple"></div>`;
+    target.innerHTML = '';
     stage.appendChild(target);
     currentTarget = target;
     appearTime = Date.now();

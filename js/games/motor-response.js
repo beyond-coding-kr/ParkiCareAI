@@ -100,9 +100,8 @@ const MotorResponseGame = (() => {
     hitCount++;
     remainingTargets--;
     updateStats();
-    target.classList.add('hit');
-    target.innerHTML += `<div class="hit-text">+${elapsed}ms</div>`;
-    setTimeout(() => nextOrFinish(container), 400);
+    target.remove();
+    nextOrFinish(container);
   }
 
   function handleMiss(container) {
@@ -114,8 +113,8 @@ const MotorResponseGame = (() => {
     remainingTargets--;
     responseTimes.push(problem.timeLimit); 
     updateStats();
-    target.classList.add('miss');
-    setTimeout(() => nextOrFinish(container), 600);
+    target.remove();
+    nextOrFinish(container);
   }
 
   function nextOrFinish(container) {

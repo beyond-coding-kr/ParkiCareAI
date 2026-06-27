@@ -26,13 +26,7 @@ const App = (() => {
   function navigateTo(screen, params = {}) {
     currentScreen = screen;
     const root = document.getElementById('app-root');
-    root.style.opacity = '0';
-    root.style.transform = 'translateY(12px)';
-    setTimeout(() => {
-      renderScreen(screen, params, root);
-      root.style.opacity = '1';
-      root.style.transform = 'translateY(0)';
-    }, 180);
+    renderScreen(screen, params, root);
   }
 
   function renderScreen(screen, params, root) {

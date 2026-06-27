@@ -19,11 +19,16 @@ const App = (() => {
 
   function init() {
     document.addEventListener('DOMContentLoaded', () => {
+      Storage.checkSession();
       navigateTo('home');
     });
   }
 
   function navigateTo(screen, params = {}) {
+    const user = Storage.getCurrentUser();
+    if (!user && screen !== 'login' && screen !== 'register') {
+      screen = 'login';
+    }
     currentScreen = screen;
     const root = document.getElementById('app-root');
     renderScreen(screen, params, root);
@@ -31,22 +36,29 @@ const App = (() => {
 
   function renderScreen(screen, params, root) {
     switch (screen) {
-      case 'home':       renderHome(root); break;
+      case 'login':        renderLogin(root); break;
+      case 'register':     renderRegister(root); break;
+      case 'home':         renderHome(root); break;
       case 'profile-create': renderProfileCreate(root, params); break;
-      case 'hub':        renderHub(root); break;
-      case 'game':       renderGame(root, params); break;
-      case 'result':     renderResult(root, params); break;
-      case 'dashboard':  renderDashboard(root); break;
-      case 'report':     renderReport(root); break;
-      default:           renderHome(root);
+      case 'hub':          renderHub(root); break;
+      case 'game':         renderGame(root, params); break;
+      case 'result':       renderResult(root, params); break;
+      case 'dashboard':    renderDashboard(root); break;
+      case 'report':       renderReport(root); break;
+      default:             renderHome(root);
     }
   }
 
   function renderHome(root) {
     const profiles = Storage.getProfiles();
     const current = Storage.getCurrentProfile();
+    const user = Storage.getCurrentUser();
     root.innerHTML = `
       <div class="screen home-screen">
+        <div class="user-session-bar">
+          <span class="user-session-info">사용자: <strong>${user ? user.username : ''}</strong></span>
+          <button class="btn-logout-boj" id="btn-logout">로그아웃</button>
+        </div>
         <div class="home-hero">
           <div class="logo-wrap">
             <div>
@@ -75,6 +87,10 @@ const App = (() => {
         </div>
       </div>
     `;
+    document.getElementById('btn-logout')?.addEventListener('click', () => {
+      Storage.logout();
+      navigateTo('login');
+    });
     document.getElementById('btn-create-first')?.addEventListener('click', () => navigateTo('profile-create'));
     document.getElementById('btn-add-profile')?.addEventListener('click', () => navigateTo('profile-create'));
     document.querySelectorAll('.profile-card').forEach(card => {
@@ -567,6 +583,126 @@ const App = (() => {
       ctx.textAlign = 'center';
       const d = new Date(sessions[i].timestamp);
       ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, x, H - 5);
+    });
+  }
+
+  function renderLogin(root) {
+    root.innerHTML = `
+      <div class="boj-login-container">
+        <div class="boj-logo-area">
+          <span class="boj-logo-text">ParkiCare</span>
+        </div>
+        <div class="boj-login-card">
+          <div class="boj-card-header">로그인</div>
+          <form id="boj-login-form">
+            <div class="boj-form-group">
+              <input type="text" id="boj-username" placeholder="아이디" required autocomplete="username">
+            </div>
+            <div class="boj-form-group">
+              <input type="password" id="boj-password" placeholder="비밀번호" required autocomplete="current-password">
+            </div>
+            <div class="boj-form-options">
+              <label class="boj-checkbox-label">
+                <input type="checkbox" id="boj-keep-login"> 로그인 상태 유지
+              </label>
+            </div>
+            <button type="submit" class="btn btn-boj-login">로그인</button>
+          </form>
+          <div class="boj-login-footer">
+            <a href="#" id="boj-btn-find-pw">비밀번호 찾기</a>
+            <span class="boj-divider">|</span>
+            <a href="#" id="boj-btn-find-id">아이디 찾기</a>
+            <span class="boj-divider">|</span>
+            <a href="#" id="boj-btn-goto-register">회원가입</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('boj-login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('boj-username').value.trim();
+      const password = document.getElementById('boj-password').value;
+      
+      const user = Storage.login(username, password);
+      if (user) {
+        navigateTo('home');
+      } else {
+        showToast('아이디 또는 비밀번호가 틀렸습니다.');
+      }
+    });
+
+    document.getElementById('boj-btn-goto-register').addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('register');
+    });
+
+    const toastHandler = (e) => {
+      e.preventDefault();
+      showToast('준비 중인 기능입니다. 서버 관리자에게 문의하세요.');
+    };
+    document.getElementById('boj-btn-find-pw').addEventListener('click', toastHandler);
+    document.getElementById('boj-btn-find-id').addEventListener('click', toastHandler);
+  }
+
+  function renderRegister(root) {
+    root.innerHTML = `
+      <div class="boj-login-container">
+        <div class="boj-logo-area">
+          <span class="boj-logo-text">ParkiCare</span>
+        </div>
+        <div class="boj-login-card">
+          <div class="boj-card-header">회원가입</div>
+          <form id="boj-register-form">
+            <div class="boj-form-group">
+              <input type="text" id="boj-reg-username" placeholder="아이디 (3자 이상)" required autocomplete="username">
+            </div>
+            <div class="boj-form-group">
+              <input type="password" id="boj-reg-password" placeholder="비밀번호 (4자 이상)" required autocomplete="new-password">
+            </div>
+            <div class="boj-form-group">
+              <input type="password" id="boj-reg-password-confirm" placeholder="비밀번호 확인" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-boj-login">회원가입</button>
+          </form>
+          <div class="boj-login-footer">
+            <a href="#" id="boj-btn-goto-login">이미 계정이 있으신가요? 로그인</a>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('boj-register-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('boj-reg-username').value.trim();
+      const password = document.getElementById('boj-reg-password').value;
+      const passwordConfirm = document.getElementById('boj-reg-password-confirm').value;
+
+      if (username.length < 3) {
+        showToast('아이디는 3자 이상이어야 합니다.');
+        return;
+      }
+      if (password.length < 4) {
+        showToast('비밀번호는 4자 이상이어야 합니다.');
+        return;
+      }
+      if (password !== passwordConfirm) {
+        showToast('비밀번호가 일치하지 않습니다.');
+        return;
+      }
+
+      const user = Storage.register(username, password);
+      if (user) {
+        showToast('회원가입이 완료되었습니다.');
+        navigateTo('home');
+      } else {
+        showToast('이미 사용 중인 아이디입니다.');
+      }
+    });
+
+    document.getElementById('boj-btn-goto-login').addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('login');
     });
   }
 

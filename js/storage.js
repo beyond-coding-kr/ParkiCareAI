@@ -54,11 +54,52 @@ const Storage = (() => {
     if (profileId) url += `&profileId=${profileId}`;
     return requestSync(url);
   }
+  function login(username, password) {
+    const res = requestSync('/auth/login', 'POST', { username, password });
+    if (res) {
+      localStorage.setItem('parkicare_user', JSON.stringify(res));
+      return res;
+    }
+    return null;
+  }
+  function register(username, password) {
+    const res = requestSync('/auth/register', 'POST', { username, password });
+    if (res) {
+      localStorage.setItem('parkicare_user', JSON.stringify(res));
+      return res;
+    }
+    return null;
+  }
+  function logout() {
+    requestSync('/auth/logout', 'POST');
+    localStorage.removeItem('parkicare_user');
+    localStorage.removeItem('parkicare_current_profile');
+  }
+  function getCurrentUser() {
+    const userStr = localStorage.getItem('parkicare_user');
+    if (!userStr) return null;
+    try {
+      return JSON.parse(userStr);
+    } catch (e) {
+      return null;
+    }
+  }
+  function checkSession() {
+    const res = requestSync('/auth/me');
+    if (res) {
+      localStorage.setItem('parkicare_user', JSON.stringify(res));
+      return res;
+    } else {
+      localStorage.removeItem('parkicare_user');
+      return null;
+    }
+  }
   return {
     getProfiles, saveProfile, deleteProfile,
     getCurrentProfile, setCurrentProfile,
     getSessions, saveSession,
     getWeakProfile, runAnalysis,
-    getProblem
+    getProblem,
+    login, register, logout, getCurrentUser, checkSession
   };
 })();

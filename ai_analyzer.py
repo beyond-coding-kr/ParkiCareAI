@@ -132,7 +132,7 @@ def analyze(profile_id, get_sessions_fn):
             'difficulty': difficulty,
             'trend': trend,
             'isWeak': weak,
-            'recommendedDifficulty': max(1, difficulty - 1) if weak else difficulty,
+            'recommendedDifficulty': difficulty,
         }
 
         if has_enough_data:

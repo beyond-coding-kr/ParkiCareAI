@@ -56,11 +56,11 @@ const App = (() => {
         <div class="home-hero">
           <div class="logo-wrap">
             <div>
-              <h1 class="logo-title">ParkiCare AI</h1>
+              <h1 class="logo-title">ParkiCare</h1>
               <p class="logo-sub">파킨슨병 맞춤형 인지·운동 케어 시스템</p>
             </div>
           </div>
-          <div class="hero-badge">AI 기반 개인화 트레이닝</div>
+          <div class="hero-badge">개인 맞춤형 인지·운동 트레이닝</div>
         </div>
         ${profiles.length === 0 ? `
           <div class="empty-state">
@@ -75,7 +75,7 @@ const App = (() => {
           <button class="btn btn-outline mt-2" id="btn-add-profile">+ 프로필 추가</button>
         `}
         <div class="home-features">
-          <div class="feature-item"><span>AI 취약 영역 분석</span></div>
+          <div class="feature-item"><span>종합 취약 영역 평가</span></div>
           <div class="feature-item"><span>미니게임 형식 훈련</span></div>
           <div class="feature-item"><span>맞춤형 리포트</span></div>
         </div>
@@ -177,7 +177,7 @@ const App = (() => {
               <div class="hub-name">${profile.name}</div>
             </div>
           </div>
-          <button class="icon-btn" id="btn-dashboard" title="AI 대시보드">대시보드</button>
+          <button class="icon-btn" id="btn-dashboard" title="종합 분석 대시보드">대시보드</button>
         </div>
         ${grade ? `
           <div class="overall-card" style="--accent:${grade.color}">
@@ -187,7 +187,7 @@ const App = (() => {
           </div>
         ` : `
           <div class="info-banner">
-            각 훈련을 3회 이상 수행하면 AI 분석이 시작됩니다
+            각 훈련을 3회 이상 수행하면 종합 평가가 시작됩니다
           </div>
         `}
         <div class="section-title">오늘의 훈련</div>
@@ -196,7 +196,7 @@ const App = (() => {
         </div>
         <div class="hub-actions">
           <button class="btn btn-outline" id="btn-report">리포트 보기</button>
-          <button class="btn btn-ai" id="btn-analyze">AI 분석 실행</button>
+          <button class="btn btn-ai" id="btn-analyze">종합 평가 분석</button>
         </div>
       </div>
     `;
@@ -310,7 +310,7 @@ const App = (() => {
         <div class="result-message ${pct >= 70 ? 'msg-good' : 'msg-warn'}">
           ${pct >= 90 ? '완벽합니다! 탁월한 수행 능력이에요.' :
             pct >= 70 ? '잘 하셨어요! 꾸준히 유지하세요.' :
-            '조금 더 노력해봐요. AI가 맞춤 문제를 준비했어요!'}
+            '수행 결과를 바탕으로 맞춤형 난이도가 자동으로 조절되었습니다. 훈련을 지속해 보세요.'}
         </div>
         <div class="result-actions">
           <button class="btn btn-outline" id="btn-retry">다시 하기</button>
@@ -335,7 +335,7 @@ const App = (() => {
       <div class="screen dashboard-screen">
         <div class="dash-header">
           <button class="back-btn" id="btn-back">← 허브</button>
-          <h2 class="screen-title">AI 분석 대시보드</h2>
+          <h2 class="screen-title">종합 평가 대시보드</h2>
         </div>
         <div class="dash-overall">
           <div class="dash-score">
@@ -385,7 +385,7 @@ const App = (() => {
         </div>
         ${weakProfile.recommendations?.length > 0 ? `
           <div class="dash-card">
-            <div class="card-title">AI 추천</div>
+            <div class="card-title">수행 분석 추천 가이드</div>
             ${weakProfile.recommendations.map(r => `
               <div class="rec-item rec-${r.priority}">
                 <div class="rec-dot"></div>

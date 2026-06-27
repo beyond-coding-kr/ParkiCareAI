@@ -11,7 +11,7 @@
   --text-secondary: #475569;/* Slate 600 */
   --text-muted: #64748b;    /* Slate 500 */
   
-  --accent-cyan: #0ea5e9;     /* Soft sky blue */
+  --accent-cyan: #4f46e5;     /* Align with Indigo brand color */
   --accent-purple: #8b5cf6;   /* Soft purple */
   --accent-green: #10b981;    /* Soft emerald green */
   --accent-red: #ef4444;      /* Soft rose red */
@@ -75,18 +75,6 @@ input, select {
 
 .screen {
   padding: 20px 18px;
-  animation: screenIn 0.3s ease both;
-}
-
-@keyframes screenIn {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .btn {
@@ -249,12 +237,10 @@ input, select {
 
 .prog-dot.correct {
   background: var(--accent-green);
-  box-shadow: 0 0 8px rgba(0, 255, 148, 0.5);
 }
 
 .prog-dot.wrong {
   background: var(--accent-red);
-  box-shadow: 0 0 8px rgba(255, 107, 107, 0.5);
 }
 
 .home-hero {
@@ -326,7 +312,6 @@ input, select {
 .profile-card:hover {
   border-color: var(--border-strong);
   background: var(--bg-card-hover);
-  transform: translateX(4px);
 }
 
 .profile-card.active {
@@ -549,7 +534,6 @@ input, select {
 }
 
 .game-card:hover {
-  transform: translateX(6px);
   border-color: var(--border-strong);
   background: var(--bg-card-hover);
 }
@@ -724,14 +708,14 @@ input, select {
   width: 52px;
   height: 52px;
   background: var(--bg-card-hover);
-  border: 1.5px solid rgba(0, 212, 255, 0.3);
-  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 26px;
   font-weight: 700;
-  color: var(--accent-cyan);
+  color: var(--solid-main);
   animation: numPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
@@ -784,7 +768,7 @@ input, select {
   width: 44px;
   height: 44px;
   border: 1.5px solid var(--border-strong);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -794,9 +778,9 @@ input, select {
 }
 
 .entered-slot.filled {
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
-  background: rgba(0, 212, 255, 0.1);
+  border-color: var(--solid-main);
+  color: var(--solid-main);
+  background: rgba(79, 70, 229, 0.08);
   animation: slotPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -827,9 +811,9 @@ input, select {
 }
 
 .keypad-btn:hover {
-  background: rgba(0, 212, 255, 0.1);
-  border-color: var(--accent-cyan);
-  color: var(--accent-cyan);
+  background: var(--bg-card-hover);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
 .keypad-btn:active {
@@ -977,7 +961,6 @@ input, select {
 .stroop-opt-btn:hover:not(:disabled) {
   border-color: var(--border-strong);
   background: var(--bg-card-hover);
-  transform: scale(1.03);
 }
 
 .stroop-opt-btn:active:not(:disabled) {
@@ -1078,7 +1061,7 @@ input, select {
 
 @keyframes targetHit {
   to {
-    transform: scale(1.4);
+    transform: scale(0.9);
     opacity: 0;
   }
 }
@@ -1094,7 +1077,7 @@ input, select {
   position: absolute;
   inset: -8px;
   border-radius: 50%;
-  border: 2px solid rgba(0, 212, 255, 0.4);
+  border: 2px solid rgba(79, 70, 229, 0.4);
   animation: ripple 1.2s ease-out infinite;
 }
 

@@ -22,12 +22,6 @@
 <body>
 
   
-  <canvas id="bg-canvas" style="
-    position:fixed; inset:0; pointer-events:none; z-index:0;
-    opacity:0.35;
-  "></canvas>
-
-  
   <main id="app-root" style="position:relative; z-index:1;">
     
     <div style="display:flex;align-items:center;justify-content:center;height:100vh;flex-direction:column;gap:16px;">
@@ -50,58 +44,6 @@
 
   
   <script src="js/app.js?v=2"></script>
-
-  
-  <script>
-    (function() {
-      const canvas = document.getElementById('bg-canvas');
-      const ctx = canvas.getContext('2d');
-      let W, H, particles;
-
-      function resize() {
-        W = canvas.width  = window.innerWidth;
-        H = canvas.height = window.innerHeight;
-      }
-
-      function initParticles() {
-        particles = Array.from({length: 40}, () => ({
-          x: Math.random() * W,
-          y: Math.random() * H,
-          r: Math.random() * 1.5 + 0.5,
-          dx: (Math.random() - 0.5) * 0.25,
-          dy: (Math.random() - 0.5) * 0.25,
-          a: Math.random(),
-          color: Math.random() > 0.5 ? '#00D4FF' : '#7B2FBE',
-        }));
-      }
-
-      function draw() {
-        ctx.clearRect(0, 0, W, H);
-        particles.forEach(p => {
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.globalAlpha = p.a * 0.6;
-          ctx.fill();
-          p.x += p.dx;
-          p.y += p.dy;
-          p.a += 0.003;
-          if (p.a > 1) p.a = 0;
-          if (p.x < 0) p.x = W;
-          if (p.x > W) p.x = 0;
-          if (p.y < 0) p.y = H;
-          if (p.y > H) p.y = 0;
-        });
-        ctx.globalAlpha = 1;
-        requestAnimationFrame(draw);
-      }
-
-      resize();
-      initParticles();
-      draw();
-      window.addEventListener('resize', () => { resize(); initParticles(); });
-    })();
-  </script>
 
 </body>
 </html>

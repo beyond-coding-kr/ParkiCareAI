@@ -430,12 +430,12 @@ const App = (() => {
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
       });
       ctx.closePath();
-      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.08)';
       ctx.lineWidth = 1;
       ctx.stroke();
       const yLabel = cy - r * (pct / 100);
-      ctx.fillStyle = 'rgba(200,214,240,0.5)';
-      ctx.font = '10px Outfit';
+      ctx.fillStyle = 'rgba(100, 116, 139, 0.8)';
+      ctx.font = '10px Pretendard, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(pct + '%', cx - 6, yLabel + 4);
     });
@@ -443,7 +443,7 @@ const App = (() => {
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
-      ctx.strokeStyle = 'rgba(255,255,255,0.12)';
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.12)';
       ctx.stroke();
     });
     ctx.beginPath();
@@ -453,9 +453,9 @@ const App = (() => {
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.closePath();
-    ctx.fillStyle = 'rgba(0,212,255,0.20)';
+    ctx.fillStyle = 'rgba(79, 70, 229, 0.15)';
     ctx.fill();
-    ctx.strokeStyle = '#00D4FF';
+    ctx.strokeStyle = '#4f46e5';
     ctx.lineWidth = 2;
     ctx.stroke();
     angles.forEach((a, i) => {
@@ -463,11 +463,11 @@ const App = (() => {
       const y = cy + r * (values[i]/100) * Math.sin(a);
       ctx.beginPath();
       ctx.arc(x, y, 5, 0, Math.PI*2);
-      ctx.fillStyle = '#00D4FF';
+      ctx.fillStyle = '#4f46e5';
       ctx.fill();
     });
-    ctx.font = 'bold 13px Outfit, sans-serif';
-    ctx.fillStyle = '#c8d6f0';
+    ctx.font = 'bold 13px Pretendard, sans-serif';
+    ctx.fillStyle = '#334155';
     ctx.textAlign = 'center';
     angles.forEach((a, i) => {
       const labelR = r + 22;
@@ -543,11 +543,11 @@ const App = (() => {
       ctx.beginPath();
       ctx.moveTo(pad.left, y);
       ctx.lineTo(W - pad.right, y);
-      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.strokeStyle = 'rgba(15, 23, 42, 0.08)';
       ctx.lineWidth = 1;
       ctx.stroke();
-      ctx.fillStyle = 'rgba(200,214,240,0.5)';
-      ctx.font = '10px Outfit';
+      ctx.fillStyle = 'rgba(100, 116, 139, 0.8)';
+      ctx.font = '10px Pretendard, sans-serif';
       ctx.textAlign = 'right';
       ctx.fillText(v + '%', pad.left - 4, y + 4);
     });
@@ -568,8 +568,8 @@ const App = (() => {
       ctx.arc(x, y, 4, 0, Math.PI*2);
       ctx.fillStyle = color;
       ctx.fill();
-      ctx.fillStyle = 'rgba(200,214,240,0.6)';
-      ctx.font = '9px Outfit';
+      ctx.fillStyle = 'rgba(100, 116, 139, 0.8)';
+      ctx.font = '9px Pretendard, sans-serif';
       ctx.textAlign = 'center';
       const d = new Date(sessions[i].timestamp);
       ctx.fillText(`${d.getMonth()+1}/${d.getDate()}`, x, H - 5);

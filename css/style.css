@@ -1,37 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css");
 
 :root {
-  --bg-base: #080c18;       /* Deep dark blue base */
-  --bg-surface: #0d1220;    /* Dark surface */
-  --bg-card: #171e30;       /* Solid dark card */
-  --bg-card-hover: #1f2840; /* Hover state card background */
-  --border: #2a354f;
-  --border-strong: #3f4e70;
-  --text-primary: #e8edf8;
-  --text-secondary: #8a9ab8;
-  --text-muted: #62728f;
+  --bg-base: #f8fafc;       /* Slate 50 - extremely clean, soft white-gray */
+  --bg-surface: #ffffff;    /* Pure white */
+  --bg-card: #ffffff;       /* Pure white */
+  --bg-card-hover: #f1f5f9; /* Slate 100 */
+  --border: #e2e8f0;        /* Slate 200 */
+  --border-strong: #cbd5e1; /* Slate 300 */
+  --text-primary: #0f172a;  /* Slate 900 */
+  --text-secondary: #475569;/* Slate 600 */
+  --text-muted: #64748b;    /* Slate 500 */
   
-  --accent-cyan: #00d4ff;
-  --accent-purple: #7b2fbe;
-  --accent-green: #00ff94;
-  --accent-red: #ff6b6b;
-  --accent-amber: #ffb800;
+  --accent-cyan: #0ea5e9;     /* Soft sky blue */
+  --accent-purple: #8b5cf6;   /* Soft purple */
+  --accent-green: #10b981;    /* Soft emerald green */
+  --accent-red: #ef4444;      /* Soft rose red */
+  --accent-amber: #f59e0b;    /* Soft amber */
 
-  --solid-main: #00d4ff;    /* Solid primary color instead of gradient */
-  --solid-card: #171e30;    /* Solid card color */
+  --solid-main: #4f46e5;      /* Solid Indigo Brand Color */
+  --solid-card: #ffffff;      /* Pure white card */
+  --overlay-bg: rgba(255, 255, 255, 0.85);
 
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
   --radius-full: 9999px;
   
-  --shadow-glow-cyan: 0 4px 14px rgba(0, 212, 255, 0.2);
-  --shadow-glow-pur: 0 4px 14px rgba(123, 47, 190, 0.2);
-  --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.25);
-  --shadow-deep: 0 12px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow-cyan: 0 4px 12px rgba(14, 165, 233, 0.12);
+  --shadow-glow-pur: 0 4px 12px rgba(139, 92, 246, 0.12);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-deep: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
   
-  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 *, *::before, *::after {
@@ -46,7 +47,7 @@ html {
 }
 
 body {
-  font-family: 'Outfit', 'Noto Sans KR', sans-serif;
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
   background: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
@@ -94,7 +95,7 @@ input, select {
   justify-content: center;
   gap: 8px;
   padding: 13px 24px;
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-md);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.01em;
@@ -104,14 +105,14 @@ input, select {
 
 .btn-primary {
   background: var(--solid-main);
-  color: #080c18;
-  box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
   font-weight: 700;
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0, 212, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
 }
 
 .btn-primary:active {
@@ -342,7 +343,7 @@ input, select {
   justify-content: center;
   font-size: 20px;
   font-weight: 700;
-  color: #080c18;
+  color: #ffffff;
   flex-shrink: 0;
   position: relative;
   z-index: 1;
@@ -476,7 +477,7 @@ input, select {
   justify-content: center;
   font-size: 16px;
   font-weight: 700;
-  color: #080c18;
+  color: #ffffff;
 }
 
 .hub-name {
@@ -842,7 +843,7 @@ input, select {
 .keypad-ok {
   background: var(--solid-main);
   border: none;
-  color: #080c18;
+  color: #ffffff;
   font-size: 16px;
   font-weight: 700;
 }
@@ -1027,7 +1028,7 @@ input, select {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(8, 12, 24, 0.75);
+  background: var(--overlay-bg);
   backdrop-filter: blur(4px);
   z-index: 2;
 }
@@ -1047,7 +1048,7 @@ input, select {
   align-items: center;
   justify-content: center;
   animation: targetAppear 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 0 10px rgba(255, 255, 255, 0.2);
   z-index: 1;
   user-select: none;
   -webkit-user-select: none;

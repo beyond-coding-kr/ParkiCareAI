@@ -765,13 +765,10 @@ input, select {
 }
 
 .keypad-btn:hover {
-  background: var(--bg-card-hover);
   border-color: var(--border-strong);
-  color: var(--text-primary);
 }
 
 .keypad-btn:active {
-  transform: scale(0.94);
 }
 
 .keypad-del {
@@ -902,11 +899,9 @@ input, select {
 
 .stroop-opt-btn:hover:not(:disabled) {
   border-color: var(--border-strong);
-  background: var(--bg-card-hover);
 }
 
 .stroop-opt-btn:active:not(:disabled) {
-  transform: scale(0.97);
 }
 
 .stroop-opt-btn.opt-correct {

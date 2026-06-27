@@ -1,12 +1,12 @@
 import random
 
 COLORS = [
-    {'name': '빨강', 'hex': '#E53935'},
-    {'name': '파랑', 'hex': '#1E88E5'},
-    {'name': '초록', 'hex': '#43A047'},
-    {'name': '노랑', 'hex': '#FFEB3B'},
-    {'name': '보라', 'hex': '#8E24AA'},
-    {'name': '주황', 'hex': '#F4511E'}
+    {'name': '빨강', 'hex': '#C62828'},
+    {'name': '파랑', 'hex': '#1565C0'},
+    {'name': '초록', 'hex': '#2E7D32'},
+    {'name': '노랑', 'hex': '#FFEA00'},
+    {'name': '보라', 'hex': '#6A1B9A'},
+    {'name': '주황', 'hex': '#FF6D00'}
 ]
 
 def generate_memory_sequence(difficulty=1, is_accessible=True):

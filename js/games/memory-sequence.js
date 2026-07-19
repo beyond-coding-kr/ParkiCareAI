@@ -81,6 +81,7 @@ const MemorySequenceGame = (() => {
       const bar = document.getElementById('mg-timer-bar');
       bar.style.transition = 'none';
       bar.style.width = '100%';
+      bar.offsetHeight; /* Force reflow so transition doesn't overlap */
       requestAnimationFrame(() => {
         bar.style.transition = `width ${problem.displayTime}ms linear`;
         bar.style.width = '0%';

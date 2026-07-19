@@ -146,7 +146,7 @@ const App = (() => {
           </div>
           <div class="form-group">
             <label>나이</label>
-            <input type="number" id="f-age" placeholder="나이" min="3" max="100" required>
+            <input type="number" id="f-age" placeholder="나이" min="3" max="150" required>
           </div>
           <button type="submit" class="btn btn-primary">프로필 생성</button>
         </form>
@@ -206,14 +206,12 @@ const App = (() => {
         </div>
         <div class="hub-actions">
           <button class="btn btn-outline" id="btn-report">리포트 보기</button>
-          <button class="btn btn-ai" id="btn-analyze">종합 평가 분석</button>
         </div>
       </div>
     `;
     document.getElementById('btn-back').addEventListener('click', () => navigateTo('home'));
     document.getElementById('btn-dashboard').addEventListener('click', () => navigateTo('dashboard'));
     document.getElementById('btn-report').addEventListener('click', () => navigateTo('report'));
-    document.getElementById('btn-analyze').addEventListener('click', () => runAnalysis(profile.id));
     document.querySelectorAll('.game-card').forEach(card => {
       card.addEventListener('click', () => {
         const gameType = card.dataset.game;

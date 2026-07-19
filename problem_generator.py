@@ -6,12 +6,12 @@ COLORS = [
     {'name': '초록', 'hex': '#2E7D32'},
     {'name': '노랑', 'hex': '#FFEA00'},
     {'name': '보라', 'hex': '#6A1B9A'},
-    {'name': '주황', 'hex': '#FF6D00'}
+    {'name': '검정', 'hex': '#212121'}
 ]
 
 def generate_memory_sequence(difficulty=1, is_accessible=True):
-    length = 2 + difficulty
-    display_time = 3500 - difficulty * 400
+    length = max(2, 2 + int(difficulty))
+    display_time = 3500 - int(difficulty) * 400
     
     if is_accessible:
         display_time = max(2000, display_time)
@@ -29,9 +29,9 @@ def generate_memory_sequence(difficulty=1, is_accessible=True):
     }
 
 def generate_attention_stroop(difficulty=1, is_accessible=True):
-    time_limit = max(800, 2500 - difficulty * 250)
-    stimulus_count = 3 + difficulty
-    option_count = min(4, 2 + difficulty)
+    time_limit = max(800, 2500 - int(difficulty) * 250)
+    stimulus_count = max(2, 3 + int(difficulty))
+    option_count = max(2, min(4, 2 + int(difficulty)))
     
     if is_accessible:
         time_limit = max(1500, time_limit)
@@ -71,9 +71,9 @@ def generate_attention_stroop(difficulty=1, is_accessible=True):
     }
 
 def generate_motor_response(difficulty=1, is_accessible=True):
-    target_count = 3 + difficulty
-    target_size = max(40, 90 - difficulty * 8)
-    time_limit = max(500, 2000 - difficulty * 200)
+    target_count = max(2, 3 + int(difficulty))
+    target_size = max(40, 90 - int(difficulty) * 8)
+    time_limit = max(500, 2000 - int(difficulty) * 200)
     
     if is_accessible:
         target_count = min(8, target_count)

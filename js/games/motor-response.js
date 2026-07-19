@@ -48,10 +48,6 @@ const MotorResponseGame = (() => {
             <span class="mstat-val" id="mtr-miss">0</span>
             <span class="mstat-label">실패</span>
           </div>
-          <div class="mstat">
-            <span class="mstat-val" id="mtr-avg">-</span>
-            <span class="mstat-label">평균(ms)</span>
-          </div>
         </div>
       </div>
     `;
@@ -128,13 +124,8 @@ const MotorResponseGame = (() => {
   function updateStats() {
     const hitEl = document.getElementById('mtr-hit');
     const missEl = document.getElementById('mtr-miss');
-    const avgEl = document.getElementById('mtr-avg');
     if (hitEl) hitEl.textContent = hitCount;
     if (missEl) missEl.textContent = missCount;
-    if (avgEl && responseTimes.length > 0) {
-      const avg = Math.round(responseTimes.reduce((a,b)=>a+b,0) / responseTimes.length);
-      avgEl.textContent = avg;
-    }
   }
 
   function finishGame() {

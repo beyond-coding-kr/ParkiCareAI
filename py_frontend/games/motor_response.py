@@ -1,7 +1,7 @@
 from pyscript import document, window
 import time
 import math
-import storage
+import py_frontend.storage as storage
 
 class MotorResponseGame:
     def __init__(self):

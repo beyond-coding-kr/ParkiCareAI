@@ -1,10 +1,10 @@
 from pyscript import document, window
 import json
-import storage
+import py_frontend.storage as storage
 import math
-from games.memory_sequence import MemorySequenceGame
-from games.attention_stroop import AttentionStroopGame
-from games.motor_response import MotorResponseGame
+from py_frontend.games.memory_sequence import MemorySequenceGame
+from py_frontend.games.attention_stroop import AttentionStroopGame
+from py_frontend.games.motor_response import MotorResponseGame
 
 class App:
     current_screen = 'home'

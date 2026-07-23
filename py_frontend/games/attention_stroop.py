@@ -1,5 +1,5 @@
 from pyscript import document, window
-import storage
+import py_frontend.storage as storage
 
 class AttentionStroopGame:
     def __init__(self):

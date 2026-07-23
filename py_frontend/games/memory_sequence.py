@@ -214,7 +214,7 @@ class MemorySequenceGame:
         }
         
         # Save session (assuming storage is globally available or imported)
-        import storage
+        import py_frontend.storage as storage
         prof = storage.Storage.get_current_profile()
         if prof:
             storage.Storage.save_session(prof['id'], 'memory_sequence', session_data)

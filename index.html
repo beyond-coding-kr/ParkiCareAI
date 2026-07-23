@@ -40,15 +40,17 @@
   <py-config>
     packages = []
     [[fetch]]
-    files = ["./py_frontend/storage.py"]
-    
-    [[fetch]]
-    from = "./py_frontend/games/"
-    to_folder = "games"
-    files = ["__init__.py", "memory_sequence.py", "attention_stroop.py", "motor_response.py"]
+    files = [
+      "./py_frontend/__init__.py",
+      "./py_frontend/storage.py",
+      "./py_frontend/games/__init__.py",
+      "./py_frontend/games/memory_sequence.py",
+      "./py_frontend/games/attention_stroop.py",
+      "./py_frontend/games/motor_response.py"
+    ]
   </py-config>
   
-  <py-script src="./py_frontend/app.py"></py-script>
+  <script type="py" src="./py_frontend/app.py"></script>
 
 </body>
 </html>

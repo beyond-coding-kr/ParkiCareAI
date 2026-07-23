@@ -34,16 +34,21 @@
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 
-  
-  <script src="js/storage.js?v=8"></script>
-  <script src="js/ai-analyzer.js?v=8"></script>
-  <script src="js/problem-generator.js?v=8"></script>
-  <script src="js/games/memory-sequence.js?v=8"></script>
-  <script src="js/games/attention-stroop.js?v=8"></script>
-  <script src="js/games/motor-response.js?v=8"></script>
+  <link rel="stylesheet" href="https://pyscript.net/releases/2023.11.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2023.11.1/core.js"></script>
 
+  <py-config>
+    packages = []
+    [[fetch]]
+    files = ["./py_frontend/storage.py"]
+    
+    [[fetch]]
+    from = "./py_frontend/games/"
+    to_folder = "games"
+    files = ["__init__.py", "memory_sequence.py", "attention_stroop.py", "motor_response.py"]
+  </py-config>
   
-  <script src="js/app.js?v=8"></script>
+  <py-script src="./py_frontend/app.py"></py-script>
 
 </body>
 </html>

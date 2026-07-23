@@ -1,4 +1,5 @@
 from pyscript import document, window
+from pyodide.ffi import create_proxy
 import py_frontend.storage as storage
 
 class AttentionStroopGame:
@@ -21,7 +22,8 @@ class AttentionStroopGame:
             self.timer_id = None
 
     def set_timeout(self, callback, ms):
-        tid = window.setTimeout(callback, ms)
+        proxy = create_proxy(callback)
+        tid = window.setTimeout(proxy, ms)
         self.timeout_ids.append(tid)
         return tid
 
@@ -82,19 +84,19 @@ class AttentionStroopGame:
         wordEl.textContent = p['text']
         wordEl.style.color = p['textColor']
         wordEl.classList.remove('pop')
-        window.requestAnimationFrame(lambda: wordEl.classList.add('pop'))
+        window.requestAnimationFrame(create_proxy(lambda *args: wordEl.classList.add('pop')))
         
         optEl = document.querySelector('#sg-options')
         optEl.innerHTML = ""
         
         def make_handler(opt_name):
-            return lambda e: self.handle_answer(opt_name, p, container)
+            return lambda *args: self.handle_answer(opt_name, p, container)
             
         for opt in p['options']:
             btn = document.createElement('button')
             btn.className = 'stroop-opt-btn'
             btn.innerHTML = f'<span class="color-dot" style="background:{opt["hex"]}"></span><span>{opt["name"]}</span>'
-            btn.onclick = make_handler(opt['name'])
+            btn.onclick = create_proxy(make_handler(opt['name']))
             optEl.appendChild(btn)
             
         if self.timer_id:
@@ -107,23 +109,22 @@ class AttentionStroopGame:
         bar.style.width = '100%'
         bar.style.background = '#4a90e2'
         
-        def do_transition():
+        def do_transition(*args):
             bar.style.transition = f"width {p['timeLimit']}ms linear"
             bar.style.width = '0%'
-        window.requestAnimationFrame(do_transition)
+        window.requestAnimationFrame(create_proxy(do_transition))
         
-        def check_time():
+        def check_time(*args):
             elapsed = window.Date.now() - self.start_time
             if elapsed >= p['timeLimit']:
                 window.clearInterval(self.timer_id)
                 self.timer_id = None
                 self.handle_answer(None, p, container)
                 
-        self.timer_id = window.setInterval(check_time, 100)
+        self.timer_id = window.setInterval(create_proxy(check_time), 100)
 
     def handle_answer(self, selected, p, container):
         if self.timer_id is None and selected is not None:
-            # Already handled by timeout, but user clicked right as it expired
             return
             
         if self.timer_id is not None:
@@ -152,7 +153,7 @@ class AttentionStroopGame:
             dot.className = f"prog-dot {'correct' if is_correct else 'wrong'}"
             
         self.current_idx += 1
-        self.set_timeout(lambda: self.show_problem(container), 900)
+        self.set_timeout(lambda *args: self.show_problem(container), 900)
 
     def finish_game(self):
         accuracy = self.correct_count / len(self.problem['problems'])

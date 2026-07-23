@@ -1,4 +1,5 @@
 from pyscript import document, window
+from pyodide.ffi import create_proxy
 import json
 import py_frontend.storage as storage
 import math
@@ -89,11 +90,11 @@ class App:
             else:
                 window.alert("로그인 실패: 아이디/비밀번호를 확인하세요.")
 
-        document.querySelector('#login-form').onsubmit = on_submit
+        document.querySelector('#login-form').onsubmit = create_proxy(on_submit)
         
         def go_reg(e):
             cls.navigate_to('register')
-        document.querySelector('#link-register').onclick = go_reg
+        document.querySelector('#link-register').onclick = create_proxy(go_reg)
 
     @classmethod
     def render_register(cls, root):
@@ -128,11 +129,11 @@ class App:
             else:
                 window.alert("회원가입 실패 (이미 존재하는 아이디일 수 있습니다).")
 
-        document.querySelector('#reg-form').onsubmit = on_submit
+        document.querySelector('#reg-form').onsubmit = create_proxy(on_submit)
         
         def go_login(e):
             cls.navigate_to('login')
-        document.querySelector('#link-login').onclick = go_login
+        document.querySelector('#link-login').onclick = create_proxy(go_login)
 
     @classmethod
     def render_home(cls, root):
@@ -197,15 +198,15 @@ class App:
             def do_logout(e):
                 storage.Storage.logout()
                 cls.navigate_to('login')
-            btn_logout.onclick = do_logout
+            btn_logout.onclick = create_proxy(do_logout)
 
         btn_create = document.querySelector('#btn-create-first')
         if btn_create:
-            btn_create.onclick = lambda e: cls.navigate_to('profile-create')
+            btn_create.onclick = create_proxy(lambda e: cls.navigate_to('profile-create'))
             
         btn_add = document.querySelector('#btn-add-profile')
         if btn_add:
-            btn_add.onclick = lambda e: cls.navigate_to('profile-create')
+            btn_add.onclick = create_proxy(lambda e: cls.navigate_to('profile-create'))
 
         cards = document.querySelectorAll('.profile-card')
         
@@ -218,7 +219,7 @@ class App:
         for i in range(cards.length):
             card = cards.item(i)
             pid = card.getAttribute('data-id')
-            card.onclick = make_card_handler(pid)
+            card.onclick = create_proxy(make_card_handler(pid))
 
     @classmethod
     def render_profile_create(cls, root, params):
@@ -242,7 +243,7 @@ class App:
         </div>
         """
         root.innerHTML = html
-        document.querySelector('#btn-back').onclick = lambda e: cls.navigate_to('home')
+        document.querySelector('#btn-back').onclick = create_proxy(lambda e: cls.navigate_to('home'))
         
         def on_submit(e):
             e.preventDefault()
@@ -251,7 +252,7 @@ class App:
             storage.Storage.save_profile({'name': name, 'age': age})
             cls.navigate_to('home')
             
-        document.querySelector('#profile-form').onsubmit = on_submit
+        document.querySelector('#profile-form').onsubmit = create_proxy(on_submit)
 
     @classmethod
     def render_hub(cls, root):
@@ -262,7 +263,6 @@ class App:
             
         weak = storage.Storage.get_weak_profile(profile['id'])
         if weak and not weak.get('games'):
-            # Trigger analysis
             storage.Storage.run_analysis(profile['id'])
             weak = storage.Storage.get_weak_profile(profile['id'])
             
@@ -330,9 +330,9 @@ class App:
         """
         root.innerHTML = html
         
-        document.querySelector('#btn-back').onclick = lambda e: cls.navigate_to('home')
-        document.querySelector('#btn-dashboard').onclick = lambda e: cls.navigate_to('dashboard')
-        document.querySelector('#btn-report').onclick = lambda e: cls.navigate_to('report')
+        document.querySelector('#btn-back').onclick = create_proxy(lambda e: cls.navigate_to('home'))
+        document.querySelector('#btn-dashboard').onclick = create_proxy(lambda e: cls.navigate_to('dashboard'))
+        document.querySelector('#btn-report').onclick = create_proxy(lambda e: cls.navigate_to('report'))
         
         cards = document.querySelectorAll('.game-card')
         def make_game_handler(gid):
@@ -341,7 +341,7 @@ class App:
         for i in range(cards.length):
             card = cards.item(i)
             gid = card.getAttribute('data-game')
-            card.onclick = make_game_handler(gid)
+            card.onclick = create_proxy(make_game_handler(gid))
 
     @classmethod
     def render_game(cls, root, params):
@@ -406,16 +406,16 @@ class App:
         """
         root.innerHTML = html
         
-        document.querySelector('#btn-replay').onclick = lambda e: cls.navigate_to('game', {'gameType': cls.current_game_type})
-        document.querySelector('#btn-hub').onclick = lambda e: cls.navigate_to('hub')
+        document.querySelector('#btn-replay').onclick = create_proxy(lambda e: cls.navigate_to('game', {'gameType': cls.current_game_type}))
+        document.querySelector('#btn-hub').onclick = create_proxy(lambda e: cls.navigate_to('hub'))
 
     @classmethod
     def render_dashboard(cls, root):
-        cls.navigate_to('hub') # Simplified for PyScript limits, or we can just redirect
+        cls.navigate_to('hub')
 
     @classmethod
     def render_report(cls, root):
-        cls.navigate_to('hub') # Simplified for PyScript limits
+        cls.navigate_to('hub')
 
-# Start the application
+# Start application
 App.init()

@@ -1,4 +1,5 @@
 from pyscript import document, window
+from pyodide.ffi import create_proxy
 import time
 import math
 import py_frontend.storage as storage
@@ -22,7 +23,8 @@ class MotorResponseGame:
         self.timeout_ids = []
 
     def set_timeout(self, callback, ms):
-        tid = window.setTimeout(callback, ms)
+        proxy = create_proxy(callback)
+        tid = window.setTimeout(proxy, ms)
         self.timeout_ids.append(tid)
         return tid
 
@@ -37,7 +39,7 @@ class MotorResponseGame:
         self.on_complete = complete_cb
         self.clear_timeouts()
         self.render(container)
-        self.set_timeout(lambda: self.spawn_target(container), 800)
+        self.set_timeout(lambda *args: self.spawn_target(container), 800)
 
     def render(self, container):
         html = f"""
@@ -97,14 +99,14 @@ class MotorResponseGame:
         self.current_target = target
         self.appear_time = window.Date.now()
         
-        def hit_handler(e):
-            if hasattr(e, 'preventDefault'):
+        def hit_handler(e=None, *args):
+            if e and hasattr(e, 'preventDefault'):
                 e.preventDefault()
             self.handle_hit(container)
             
-        target.onclick = hit_handler
+        target.onclick = create_proxy(hit_handler)
         
-        def miss_handler():
+        def miss_handler(*args):
             if not self.is_finished:
                 self.handle_miss(container)
         
@@ -145,7 +147,7 @@ class MotorResponseGame:
             return
             
         document.querySelector('#mtr-remain').textContent = str(self.remaining_targets)
-        self.set_timeout(lambda: self.spawn_target(container), 300)
+        self.set_timeout(lambda *args: self.spawn_target(container), 300)
 
     def update_stats(self):
         hitEl = document.querySelector('#mtr-hit')

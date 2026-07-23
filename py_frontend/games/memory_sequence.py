@@ -1,4 +1,5 @@
 from pyscript import document, window
+from pyodide.ffi import create_proxy
 import random
 import time
 import json
@@ -22,7 +23,8 @@ class MemorySequenceGame:
         self.timeout_ids = []
 
     def set_timeout(self, callback, ms):
-        tid = window.setTimeout(callback, ms)
+        proxy = create_proxy(callback)
+        tid = window.setTimeout(proxy, ms)
         self.timeout_ids.append(tid)
         return tid
 
@@ -84,14 +86,14 @@ class MemorySequenceGame:
 
         # Add event listeners
         def make_handler(key):
-            def handler(event):
+            def handler(*args):
                 self.handle_keypad(key, container)
             return handler
 
         btns = container.querySelectorAll('.keypad-btn')
         for i in range(btns.length):
             btn = btns.item(i)
-            btn.onclick = make_handler(btn.getAttribute("data-key"))
+            btn.onclick = create_proxy(make_handler(btn.getAttribute("data-key")))
 
     def start_round(self, container):
         self.current_round += 1
@@ -107,7 +109,7 @@ class MemorySequenceGame:
         self.hide_el('mg-input-area')
         self.hide_el('mg-result')
         
-        def step1():
+        def step1(*args):
             self.hide_el('mg-ready')
             self.show_el('mg-display')
             nums_html = "".join([f'<span class="mg-num">{n}</span>' for n in self.problem['sequence']])
@@ -118,12 +120,12 @@ class MemorySequenceGame:
             bar.style.width = '100%'
             bar.offsetHeight
             
-            def do_transition():
+            def do_transition(*args):
                 bar.style.transition = f"width {self.problem['displayTime']}ms linear"
                 bar.style.width = '0%'
-            window.requestAnimationFrame(do_transition)
+            window.requestAnimationFrame(create_proxy(do_transition))
             
-            def step2():
+            def step2(*args):
                 self.show_phase = False
                 self.hide_el('mg-display')
                 self.show_el('mg-input-area')
@@ -194,7 +196,7 @@ class MemorySequenceGame:
         if dot:
             dot.className = f"prog-dot {icon_cls}"
             
-        def next_step():
+        def next_step(*args):
             if self.current_round < self.total_rounds:
                 result_el.classList.remove('show')
                 self.start_round(container)
@@ -213,7 +215,6 @@ class MemorySequenceGame:
             'difficulty': self.problem['difficulty']
         }
         
-        # Save session (assuming storage is globally available or imported)
         import py_frontend.storage as storage
         prof = storage.Storage.get_current_profile()
         if prof:

@@ -145,6 +145,23 @@ app.post('/api/sessions', async (req, res) => {
     total_rounds: data.totalRounds,
     difficulty: data.difficulty
   });
+
+  // Re-analyze profile and update WeakProfile immediately
+  try {
+    const get_sessions_fn = async (pid, gtype) => {
+      return await GameSession.findAll({ where: { profile_id: pid, game_type: gtype }, order: [['timestamp', 'ASC']] });
+    };
+    const latest_analysis = await analyze(profile_id, get_sessions_fn, GlobalStats);
+    let weakProfile = await WeakProfile.findOne({ where: { profile_id } });
+    if (weakProfile) {
+      weakProfile.data_json = JSON.stringify(latest_analysis);
+      await weakProfile.save();
+    } else {
+      await WeakProfile.create({ profile_id, data_json: JSON.stringify(latest_analysis) });
+    }
+  } catch (e) {
+    console.error("Error updating weak profile on session save:", e);
+  }
   
   ok(res, { id: sess.id });
 });
@@ -196,7 +213,16 @@ app.get('/api/generate_problem', async (req, res) => {
   
   if (profile_id) {
     if (!(await verifyProfileOwnership(req, profile_id))) return err(res, '접근 권한이 없습니다.', 403);
-    const weakProfileRow = await WeakProfile.findOne({ where: { profile_id } });
+    
+    let weakProfileRow = await WeakProfile.findOne({ where: { profile_id } });
+    if (!weakProfileRow) {
+      const get_sessions_fn = async (pid, gtype) => {
+        return await GameSession.findAll({ where: { profile_id: pid, game_type: gtype }, order: [['timestamp', 'ASC']] });
+      };
+      const latest_analysis = await analyze(profile_id, get_sessions_fn, GlobalStats);
+      weakProfileRow = await WeakProfile.create({ profile_id, data_json: JSON.stringify(latest_analysis) });
+    }
+    
     if (weakProfileRow) {
       const wp = JSON.parse(weakProfileRow.data_json);
       problem = generate_for_profile(wp, game_type, is_accessible);

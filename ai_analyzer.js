@@ -45,7 +45,7 @@ function calc_difficulty(sessions) {
     next_diff -= 1;
   }
   
-  return Math.max(1, Math.min(5, next_diff));
+  return Math.max(0, Math.min(5, next_diff));
 }
 
 function calc_trend(sessions) {
